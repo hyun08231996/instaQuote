@@ -6,11 +6,11 @@
 instaQuote is a **quotation generation tool** developed using **Google Apps Script**. It automates the process of calculating **CPI (Cost Per Interview)** and estimating **sales and gross margin (GM)**, allowing project managers to generate quotes efficiently without manual errors.
 
 ## My Role 🙋
+- **Designed an intuitive and user-friendly UI/UX in Figma, optimizing workflow efficiency and user experience.**
 - Developed the back-end using **Google Apps Script** to process data from Google Sheets.
 - Built the front-end using **HTML, CSS, and JavaScript**, ensuring a user-friendly interface.
 - Implemented key features like **batch country selection, automated quotation document generation, and Gmail integration**.
 - Designed the system to **eliminate manual CPI calculations and RFQ data input**, reducing errors and improving efficiency in tracking quotations.
-- **Designed an intuitive and user-friendly UI/UX in Figma, optimizing workflow efficiency and user experience.**
 - Developed **CRUD (Create, Read, Update, Delete) functionalities** for managing RFQs (Requests for Quotation).
 - Implemented features for **saving RFQs, loading saved RFQs, and updating RFQs** to ensure seamless management of quotations.
 
