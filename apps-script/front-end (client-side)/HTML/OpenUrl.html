@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top" />
+  </head>
+  <body>
+    <!-- You can display a message here if you want, e.g. "Redirecting..." -->
+    <div id="message">Redirecting...</div>
+    <script>
+      function openNewTab() {
+        var url = "<?= url ?>";  // URL passed from the doPost function
+        var newTab = window.open(url, '_blank');  // Open URL in a new tab
+
+        if (!newTab || newTab.closed || typeof newTab.closed == 'undefined') {
+          alert("Popup blocked! Please allow popups for this site.");
+        }
+      }
+      
+      window.onload = openNewTab;  // Automatically call the function when the page loads
+    </script>
+  </body>
+</html>

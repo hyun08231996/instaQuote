@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--INCLUDE REQUIRED EXTERNAL JAVASCRIPT AND CSS LIBRARIES-->
+    
+    <!-- jQuery UI -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script> -->
+   
+
+    <!-- Date Range Picker -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+    <!-- Bootstrap CSS -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous"> -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <!-- fontawesome -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Bootstrap-select -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/css/bootstrap-select.min.css"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
+    
+    <!-- bootstrap icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link href='https://fonts.googleapis.com/css?family=Quattrocento Sans' rel='stylesheet'>
+
+    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" /> -->
+    <!-- odometer -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.6/themes/odometer-theme-default.css" integrity="sha512-kMPqFnKueEwgQFzXLEEl671aHhQqrZLS5IP3HzqdfozaST/EgU+/wkM07JCmXFAt9GO810I//8DBonsJUzGQsQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <?!= include('[CSS]Style'); ?> <!--INCLUDE [CSS]Style.html FILE-->
+
+    <style>
+      .main-body h5 {
+        font-size:1rem;
+      }
+      .main-body h6 {
+        font-size:0.9rem;
+      }
+    </style>
+    
+  </head>
+ 
+  <body>
+    {{NAV_SIDEBAR}}
+
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+      <div class="nav-body">
+
+        <!-- Page Title -->
+        <div class="page-title">Good <span class="greeting-time"></span> <?= USER_NAME ?> 
+        <span class="morning-emoji d-none"><lottie-player class="animated-emoji" src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f31e/lottie.json" background="transparent"  speed="1"  style="width: 30px; height: 30px;" loop autoplay></lottie-player></span>
+        <span class="afternoon-emoji d-none"><lottie-player class="animated-emoji" src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f600/lottie.json" background="transparent"  speed="1"  style="width: 28px; height: 28px;" loop autoplay></lottie-player></span>
+        <span class="evening-emoji d-none"><lottie-player class="animated-emoji" src="https://fonts.gstatic.com/s/e/notoemoji/latest/263a_fe0f/lottie.json" background="transparent"  speed="1"  style="width: 28px; height: 28px;" loop autoplay></lottie-player></span>
+        </div>
+        <div class="flex-break"></div>
+        <div class="page-subtitle"><i class="daily-quote"></i> • <span class="today-date"></span></div>
+
+      </div>
+    </nav>
+
+    <!-- Main body -->
+    <div class="main-body" style="margin-top:82.5px;padding-top: 20px;color:#3d3d43;">
+      <div class="row" style="margin:auto;">
+        <div class="card col-9 shadow-sm overview-card" style="padding:25px;margin-right:10px;">
+          <h5 style="color:#3d3d43;margin-bottom:20px;display:inline-flex;align-items:center;">
+            <select class="form-select dropdown-to-text" id="selectOverviewScope" style="width: 46.42px;">
+              <option>Your</option>
+              <option>Total</option>
+            </select>
+            <span class="hide-input"></span>
+            <select class="form-select dropdown-to-text" id="selectOverviewPeriod" style="width: 74.58px;">
+              <option>Weekly</option>
+              <option selected>Monthly</option>
+              <option>Quarterly</option>
+              <option>Yearly</option>
+            </select>
+            <span class="hide-input"></span>
+             Overview</h5>
+          <h6>Korea</h6>
+          <div class="row" style="color:#3d3d43;">
+            <div class="col-custom-5" style="padding-left:8px !important;padding-right:8px !important;">
+              <div class="card status-card shadow-sm">
+                <div class="card-body">
+                    <div class="status-container"><span class="status-icon" data-status="Bidding">●</span> Bidding</div>
+                    <div class="status-cnt odometer status-bidding-kr">0</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-custom-5" style="padding-left:8px !important;padding-right:8px !important;">
+              <div class="card status-card shadow-sm">
+                <div class="card-body">
+                    <div class="status-container"><span class="status-icon" data-status="Pending">●</span> Pending</div>
+                    <div class="status-cnt odometer status-pending-kr">0</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-custom-5" style="padding-left:8px !important;padding-right:8px !important;">
+              <div class="card status-card shadow-sm">
+                <div class="card-body">
+                    <div class="status-container"><span class="status-icon" data-status="Ordered">●</span> Ordered</div>
+                    <div class="status-cnt odometer status-ordered-kr">0</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-custom-5" style="padding-left:8px !important;padding-right:8px !important;">
+              <div class="card status-card shadow-sm">
+                <div class="card-body">
+                    <div class="status-container"><span class="status-icon" data-status="Pass">●</span> Pass</div>
+                    <div class="status-cnt odometer status-pass-kr">0</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-custom-5" style="padding-left:8px !important;padding-right:8px !important;">
+              <div class="card status-card shadow-sm">
+                <div class="card-body">
+                    <div class="status-container"><span class="status-icon" data-status="Failed">●</span> Failed</div>
+                    <div class="status-cnt odometer status-failed-kr">0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br>
+          <h6>Overseas</h6>
+          <div class="row" style="color:#3d3d43;">
+            <div class="col-custom-5" style="padding-left:8px !important;padding-right:8px !important;">
+              <div class="card status-card shadow-sm">
+                <div class="card-body">
+                    <div class="status-container"><span class="status-icon" data-status="Bidding">●</span> Bidding</div>
+                    <div class="status-cnt odometer status-bidding-os">0</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-custom-5" style="padding-left:8px !important;padding-right:8px !important;">
+              <div class="card status-card shadow-sm">
+                <div class="card-body">
+                    <div class="status-container"><span class="status-icon" data-status="Pending">●</span> Pending</div>
+                    <div class="status-cnt odometer status-pending-os">0</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-custom-5" style="padding-left:8px !important;padding-right:8px !important;">
+              <div class="card status-card shadow-sm">
+                <div class="card-body">
+                    <div class="status-container"><span class="status-icon" data-status="Ordered">●</span> Ordered</div>
+                    <div class="status-cnt odometer status-ordered-os">0</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-custom-5" style="padding-left:8px !important;padding-right:8px !important;">
+              <div class="card status-card shadow-sm">
+                <div class="card-body">
+                    <div class="status-container"><span class="status-icon" data-status="Pass">●</span> Pass</div>
+                    <div class="status-cnt odometer status-pass-os">0</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-custom-5" style="padding-left:8px !important;padding-right:8px !important;">
+              <div class="card status-card shadow-sm">
+                <div class="card-body">
+                    <div class="status-container"><span class="status-icon" data-status="Failed">●</span> Failed</div>
+                    <div class="status-cnt odometer status-failed-os">0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div align="right" style="margin-bottom:-15px;">
+            <span class="overview-date-range"></span>
+          </div>
+        </div>
+        <div class="card col shadow-sm ordered-card position-relative" style="padding:25px;margin-left:10px;">
+          <img class="position-absolute panda-qq" src="https://i.postimg.cc/062k9Cmy/final-panda.png"/>
+          <h5 style="color:#3d3d43;margin-bottom:20px;display:inline-flex;align-items:center;">
+            <select class="form-select dropdown-to-text" id="selectOrderedScope" style="width: 50.27px;">
+              <option>Your</option>
+              <option selected>Total</option>
+            </select>
+            <span class="hide-input"></span>
+            <select class="form-select dropdown-to-text" id="selectOrderedPeriod" style="width: 60.09px;">
+              <option>Weekly</option>
+              <option>Monthly</option>
+              <option>Quarterly</option>
+              <option selected>Yearly</option>
+            </select>
+            <span class="hide-input"></span>
+             Ordered</h5>
+          <h6>Korea</h6>
+          <div class="row" style="color:#3d3d43;">
+            <div class="col" style="padding-left:8px !important;padding-right:8px !important;">
+              <div class="card status-card shadow-sm">
+                <div class="card-body">
+                    <div class="status-container"><span class="status-icon" data-status="Ordered">●</span> Ordered (Win Rate)</div>
+                    <div style="display:flex;align-items:baseline;margin-bottom:-1.79px;">
+                      <div class="status-cnt odometer odometer ordered-cnt-kr">0</div>
+                      <span class="ordered-cnt-divider">/</span><div class="status-cnt odometer overall-cnt-kr">0</div>
+                      <div class="status-cnt odometer odometer win-rate-kr">0</div><span>%</span>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br>
+          <h6>Overseas</h6>
+          <div class="row" style="color:#3d3d43;">
+            <div class="col" style="padding-left:8px !important;padding-right:8px !important;">
+              <div class="card status-card shadow-sm">
+                <div class="card-body">
+                    <div class="status-container"><span class="status-icon" data-status="Ordered">●</span> Ordered (Win Rate)</div>
+                    <div style="display:flex;align-items:baseline;margin-bottom:-1.79px;">
+                      <div class="status-cnt odometer ordered-cnt-os">0</div>
+                      <span class="ordered-cnt-divider">/</span><div class="status-cnt odometer overall-cnt-os">0</div>
+                      <div class="status-cnt odometer win-rate-os">0</div><span>%</span>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div align="right" style="margin-bottom:-15px;">
+            <span class="ordered-date-range"></span>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="card shadow-sm" style="padding:25px;">
+        <h5 style="color:#3d3d43;margin-bottom:20px;">Quick Access</h5>
+        <!-- Menus for Korea -->
+        <h6>Korea</h6>
+        <div class="row korea-shortcut-container" style="color:#3d3d43;">
+          
+          <div class="col-2" style="padding-left:8px !important;padding-right:8px !important;">
+            <div class="card quick-access-menu shadow-sm">
+              <a class="btn shortcut-btn" target="_top" href="<?= SCRIPT_URL ?>?mode=Create-KR">
+              <div class="card-body">
+                
+                  <div class="icon-wrapper"><i class="bi bi-plus-square"></i></div>
+                  <div class="shortcut-btn-name">Create RFQ  <i class="bi bi-chevron-right"></i></div>
+                  <div class="shortcut-btn-desc">Calculate and generate new RFQ</div>
+              </div>
+              </a>
+            </div>
+          </div>
+          <div class="col-2" style="padding-left:8px !important;padding-right:8px !important;">
+            <div class="card quick-access-menu shadow-sm">
+              <a class="btn shortcut-btn" target="_top" href="<?= SCRIPT_URL ?>?mode=Draft-KR">
+              <div class="card-body">
+                
+                  <div class="icon-wrapper"><i class="bi bi-table"></i></div>
+                  <div class="shortcut-btn-name">Drafts  <i class="bi bi-chevron-right"></i></div>
+                  <div class="shortcut-btn-desc">Keep editing all saved RFQ drafts</div>
+              </div>
+              </a>
+            </div>
+          </div>
+          <div class="col-2" style="padding-left:8px !important;padding-right:8px !important;">
+            <div class="card quick-access-menu shadow-sm">
+              <a class="btn shortcut-btn" target="_top" href="<?= SCRIPT_URL ?>?mode=List-KR">
+              <div class="card-body">
+                
+                  <div class="icon-wrapper"><i class="bi bi-table"></i></div>
+                  <div class="shortcut-btn-name">RFQ List  <i class="bi bi-chevron-right"></i></div>
+                  <div class="shortcut-btn-desc">Access and review the full list of RFQs</div>
+              </div>
+              </a>
+            </div>
+          </div>
+          <div class="col-2" style="padding-left:8px !important;padding-right:8px !important;">
+            <div class="card quick-access-menu shadow-sm">
+              <a class="btn shortcut-btn" target="_top" href="<?= SCRIPT_URL ?>?mode=Dash-KR">
+              <div class="card-body">
+                
+                  <div class="icon-wrapper"><i class="bi bi-speedometer2"></i></div>
+                  <div class="shortcut-btn-name">RFQ Dashboard  <i class="bi bi-chevron-right"></i></div>
+                  <div class="shortcut-btn-desc">Analyze RFQ trends by date, client, owners</div>  
+              </div>
+              </a>
+            </div>
+          </div>
+          <div class="col-2" style="padding-left:8px !important;padding-right:8px !important;">
+            <div class="card quick-access-menu shadow-sm">
+              <a class="btn shortcut-btn" target="_top" href="<?= SCRIPT_URL ?>?mode=Status-KR">
+              <div class="card-body">
+                
+                  <div class="icon-wrapper"><i class="bi bi-bar-chart-line"></i></div>
+                  <div class="shortcut-btn-name">Order Status  <i class="bi bi-chevron-right"></i></div>
+                  <div class="shortcut-btn-desc">Track the progress of all ordered RFQs</div>
+              </div>
+              </a>
+            </div>
+          </div>
+          
+        </div>
+        <br>
+        <!-- Menus for Overseas -->
+        <h6>Overseas</h6>
+        <div class="row overseas-shortcut-container">
+          
+          <div class="col-2" style="padding-left:8px !important;padding-right:8px !important;">
+            <div class="card quick-access-menu shadow-sm">
+              <a class="btn shortcut-btn" target="_top" href="<?= SCRIPT_URL ?>?mode=Create-OS">
+              <div class="card-body">
+                
+                  <div class="icon-wrapper"><i class="bi bi-plus-square"></i></div>
+                  <div class="shortcut-btn-name">Create RFQ  <i class="bi bi-chevron-right"></i></div>
+                  <div class="shortcut-btn-desc">Calculate and generate new RFQ</div>
+              </div>
+              </a>
+            </div>
+          </div>
+          <div class="col-2" style="padding-left:8px !important;padding-right:8px !important;">
+            <div class="card quick-access-menu shadow-sm">
+              <a class="btn shortcut-btn" target="_top" href="<?= SCRIPT_URL ?>?mode=Draft-OS">
+              <div class="card-body">
+                
+                  <div class="icon-wrapper"><i class="bi bi-table"></i></div>
+                  <div class="shortcut-btn-name">Drafts  <i class="bi bi-chevron-right"></i></div>
+                  <div class="shortcut-btn-desc">Keep editing all saved RFQ drafts</div>
+              </div>
+              </a>
+            </div>
+          </div>
+          <div class="col-2" style="padding-left:8px !important;padding-right:8px !important;">
+            <div class="card quick-access-menu shadow-sm">
+              <a class="btn shortcut-btn" target="_top" href="<?= SCRIPT_URL ?>?mode=List-OS">
+              <div class="card-body">
+                
+                  <div class="icon-wrapper"><i class="bi bi-table"></i></div>
+                  <div class="shortcut-btn-name">RFQ List  <i class="bi bi-chevron-right"></i></div>
+                  <div class="shortcut-btn-desc">Access and review the full list of RFQs</div>
+              </div>
+              </a>
+            </div>
+          </div>
+          <div class="col-2" style="padding-left:8px !important;padding-right:8px !important;">
+            <div class="card quick-access-menu shadow-sm">
+              <a class="btn shortcut-btn" target="_top" href="<?= SCRIPT_URL ?>?mode=Dash-OS">
+              <div class="card-body">
+                
+                  <div class="icon-wrapper"><i class="bi bi-speedometer2"></i></div>
+                  <div class="shortcut-btn-name">RFQ Dashboard  <i class="bi bi-chevron-right"></i></div>
+                  <div class="shortcut-btn-desc">Analyze RFQ trends by date, client, owners</div>
+              </div>
+              </a>
+            </div>
+          </div>
+          <div class="col-2" style="padding-left:8px !important;padding-right:8px !important;">
+            <div class="card quick-access-menu shadow-sm">
+              <a class="btn shortcut-btn" target="_top" href="<?= SCRIPT_URL ?>?mode=Status-OS">
+              <div class="card-body">
+                
+                  <div class="icon-wrapper"><i class="bi bi-bar-chart-line"></i></div>
+                  <div class="shortcut-btn-name">Order Status  <i class="bi bi-chevron-right"></i></div>
+                  <div class="shortcut-btn-desc">Track the progress of all ordered RFQs</div>
+              </div>
+              </a>
+            </div>
+          </div>
+          
+          <div class="col-2" style="padding-left:8px !important;padding-right:8px !important;">
+            <div class="card quick-access-menu shadow-sm">
+              <a class="btn shortcut-btn" target="_top" href="<?= SCRIPT_URL ?>?mode=Vendor-OS">
+              <div class="card-body">
+                
+                  <div class="icon-wrapper"><i class="bi bi-table"></i></div>
+                  <div class="shortcut-btn-name">Vendor List  <i class="bi bi-chevron-right"></i></div>
+                  <div class="shortcut-btn-desc">View bidding details of all vendors</div>
+              </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {{FOOTER}}
+    
+    
+    <!--jQuery & jQueryUI cdn -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js" integrity="sha256-J8ay84czFazJ9wcTuSDLpPmwpMXOm573OUtZHPQqpEU=" crossorigin="anonymous"></script>
+
+    <!--bootstrap and popper cdn -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+
+    <!-- bootstrap select -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/js/bootstrap-select.min.js"></script> -->
+    <!-- Latest compiled and minified JavaScript -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/i18n/defaults-*.min.js"></script> -->
+    <?!= include('[JS]Bootstrap-Select.js'); ?>
+
+    <!-- moment -->
+    <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
+    <!-- Date Range Picker -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    
+    <!-- lottie -->
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    
+    <!-- odometer -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.6/odometer.min.js" integrity="sha512-PuIAuwEDHqlZutYl4ilP34ELWj1mfYxpMweAvpOMKgdzTPOmxCuUK8mygULB4dJ4eoNcGv0WCJ7qLcnczaKfgw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <?!= include('[JS]Navbar'); ?> <!--INCLUDE [JS]Navbar.html FILE-->
+
+    <script>
+      var overview_data;
+      google.script.run.withSuccessHandler(data => {
+          overview_data = data;
+
+          $('.status-cnt,.overview-date-range,.ordered-date-range').css('opacity','1');
+          $('.dropdown-to-text').trigger('change');
+
+          
+      }).withFailureHandler(function (error) {
+        console.error("Error in fetching rfq overview data: ", error);
+      }).getRFQOverview();
+      
+      const daily_quotes = [
+          "Happiness is a choice",
+          "You are enough",
+          "Dream big, work hard",
+          "Smile often",
+          "Be the sunshine",
+          "Enjoy the little things",
+          "Stay positive",
+          "Chase your dreams",
+          "Kindness is free",
+          "Make today amazing",
+          "Love more, worry less",
+          "Choose joy",
+          "The best is yet to come",
+          "You’ve got this",
+          "Believe in yourself",
+          "Shine bright",
+          "Every day is a fresh start",
+          "Happiness looks good on you",
+          "Keep going, keep growing",
+          "Celebrate every victory",
+          "Spread love everywhere you go",
+          "Good vibes only",
+          "You are capable of amazing things",
+          "Be fearless in pursuit of your dreams",
+          "Live, laugh, love",
+          "Do more of what makes you happy",
+          "Start where you are",
+          "Progress, not perfection",
+          "Every moment is a gift",
+          "Radiate positivity",
+          "Focus on the good",
+          "Be your own kind of beautiful",
+          "Keep your face to the sunshine",
+          "Stay hopeful",
+          "Smile—it’s contagious",
+          "Success is a journey",
+          "Be the change you wish to see",
+          "Dare to be different",
+          "Life is short, make it sweet",
+          "You’re stronger than you think",
+          "Embrace the journey",
+          "Laugh loud, love louder",
+          "Take it one step at a time",
+          "You are your only limit",
+          "Spread your wings and fly",
+          "Trust the timing of your life",
+          "The sky is the limit",
+          "Find joy in the journey",
+          "Gratitude changes everything",
+          "Be present in all things",
+          "The world needs your light",
+          "Happiness starts with you",
+          "Your vibe attracts your tribe",
+          "Keep moving forward",
+          "Start each day with a grateful heart",
+          "Be unapologetically you",
+          "Nothing is impossible",
+          "Say yes to new adventures",
+          "Breathe. You’ve got this",
+          "Do what you love",
+          "Dream it, believe it, achieve it",
+          "Stay wild, moon child",
+          "Celebrate your uniqueness",
+          "Great things never come from comfort zones",
+          "Be a rainbow in someone else’s cloud",
+          "Keep your eyes on the stars",
+          "Happiness is homemade",
+          "The magic is in you",
+          "You’re doing better than you think",
+          "Every day is a new beginning",
+          "Live life in full bloom",
+          "Success starts with believing in yourself",
+          "Take time to make your soul happy",
+          "Follow your heart",
+          "Stay curious",
+          "Do good, feel good",
+          "Happiness blooms from within",
+          "Enjoy every moment",
+          "Make today count",
+          "Be the reason someone smiles today",
+          "Create your own sunshine",
+          "Let your dreams take flight",
+          "Celebrate your progress",
+          "Live with no regrets",
+          "Find beauty in the ordinary",
+          "Let your heart lead the way",
+          "Happiness is a journey, not a destination",
+          "Be kind to yourself",
+          "Think happy, be happy",
+          "Don’t wait for the perfect moment",
+          "Keep dreaming big",
+          "Your smile is your superpower",
+          "Life is what you make it",
+          "You have what it takes",
+          "Choose happiness every day",
+          "Be bold, be brave",
+          "Stay golden",
+          "Cheers and happy activities"
+        ];
+      const randomQuote = daily_quotes[Math.floor(Math.random() * daily_quotes.length)];
+
+      
+
+      function getGreetingTime (m) {
+        var g = null; //return g
+        
+        if(!m || !m.isValid()) { return; } //if we can't find a valid or filled moment, we return.
+        
+        var split_afternoon = 12 //24hr time to split the afternoon
+        var split_evening = 17 //24hr time to split the evening
+        var currentHour = parseFloat(m.format("HH"));
+        
+        if(currentHour >= split_afternoon && currentHour <= split_evening) {
+          g = "Afternoon";
+        } else if(currentHour > split_evening) {
+          g = "Evening";
+        } else {
+          g = "Morning";
+        }
+        
+        return g;
+      }
+
+      window.odometerOptions = {
+        auto: false, // Don't automatically initialize everything with class 'odometer'
+        selector: '.odometer', // Change the selector used to automatically find things to be animated
+        format: '(,ddd).dd', // Change how digit groups are formatted, and how many digits are shown after the decimal point
+        duration: 2000, // Change how long the javascript expects the CSS animation to take
+      };
+
+      $(function(){
+        
+
+        $('.status-icon').addClass('blink');
+
+        if(getGreetingTime(moment()) == "Morning") $('.morning-emoji').removeClass('d-none');
+        if(getGreetingTime(moment()) == "Afternoon") $('.afternoon-emoji').removeClass('d-none');
+        if(getGreetingTime(moment()) == "Evening") $('.evening-emoji').removeClass('d-none');
+        $('.daily-quote').text(randomQuote);
+        $('span.greeting-time').text(getGreetingTime(moment())+",");
+        $('span.today-date').text(moment().format("MMMM Do, YYYY"));
+
+        $(document).on('change', '.dropdown-to-text', function(e){
+
+          $(this).nextAll('.hide-input').eq(0).text('');
+          
+          const this_width = $(this).nextAll('.hide-input').eq(0).text($(this).val()).width();
+          const overview_scope = $('#selectOverviewScope').val();
+          const overview_period = $('#selectOverviewPeriod').val();
+          const ordered_scope = $('#selectOrderedScope').val();
+          const ordered_period = $('#selectOrderedPeriod').val();
+
+          $(this).width(this_width);
+          
+          if($(e.currentTarget).attr('id').startsWith('selectOverview')) {
+            //$('.overview-card .status-cnt,.overview-date-range').css('opacity','0');
+            //$('.overview-card .status-cnt,.overview-date-range').addClass('fade-in');
+            Object.keys(overview_data.KR[overview_scope][overview_period]).forEach(key => {
+              const newValue = overview_data.KR[overview_scope][overview_period][key];
+              //const element = document.querySelector(`.status-${key.toLowerCase()}-kr`);
+              //const element = $(`.status-${key.toLowerCase()}-kr`);
+              $(`.status-${ key.toLowerCase() }-kr`).text(overview_data.KR[overview_scope][overview_period][key]);
+              //AnimateNumbers(element,newValue);
+            });
+            Object.keys(overview_data.OS[overview_scope][overview_period]).forEach(key => {
+              // const newValue = overview_data.OS[overview_scope][overview_period][key];
+              // const element = document.querySelector(`.status-${key.toLowerCase()}-os`);
+              $(`.status-${ key.toLowerCase() }-os`).text(overview_data.OS[overview_scope][overview_period][key]);
+              // AnimateNumbers(element,newValue);
+            });
+            $('.overview-date-range').text(overview_data.Range[overview_period]);
+          } else {
+            //$('.ordered-card .status-cnt,.ordered-date-range').css('opacity','0');
+            //$('.ordered-card .status-cnt,.ordered-date-range').addClass('fade-in');
+            const ordered_cnt_kr = overview_data.KR[ordered_scope][ordered_period].Ordered;
+            const ordered_cnt_os = overview_data.OS[ordered_scope][ordered_period].Ordered;
+            const overall_cnt_kr = overview_data.KR[ordered_scope][ordered_period].Overall;
+            const overall_cnt_os = overview_data.OS[ordered_scope][ordered_period].Overall;
+            
+            $(`.ordered-cnt-kr`).text(ordered_cnt_kr);
+            $(`.ordered-cnt-os`).text(ordered_cnt_os);
+
+            $(`.overall-cnt-kr`).text(overall_cnt_kr);
+            $(`.overall-cnt-os`).text(overall_cnt_os);
+
+            $(`.win-rate-kr`).text((isNaN(ordered_cnt_kr / overall_cnt_kr) ? 0 : (ordered_cnt_kr / overall_cnt_kr) * 100).toFixed(1));
+            $(`.win-rate-os`).text((isNaN(ordered_cnt_os / overall_cnt_os) ? 0 : (ordered_cnt_os / overall_cnt_os) * 100).toFixed(1));
+
+            $('.ordered-date-range').text(overview_data.Range[ordered_period]);
+          }
+
+          
+          //$('.status-cnt,.overview-date-range,.ordered-date-range').removeClass('fade-in');
+          $('.status-icon').removeClass('blink');
+
+          // $(this).nextAll('.hide-input').eq(0).text('');
+        });
+
+        $('.dropdown-to-text').hover(function(){
+          const this_width = $(this).nextAll('.hide-input').eq(0).text($(this).val()).width();
+          $(this).width(this_width + 17);
+        }, function(){
+          const this_width = $(this).nextAll('.hide-input').eq(0).text($(this).val()).width();
+          $(this).width(this_width);
+        });
+
+      })
+    </script>
+  </body>
+</html>

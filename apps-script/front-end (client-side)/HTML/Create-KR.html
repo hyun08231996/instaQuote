@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--INCLUDE REQUIRED EXTERNAL JAVASCRIPT AND CSS LIBRARIES-->
+    
+    <!-- jQuery UI -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script> -->
+   
+
+    <!-- Date Range Picker -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+    <!-- Bootstrap CSS -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous"> -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <!-- fontawesome -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Bootstrap-select -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/css/bootstrap-select.min.css"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
+
+    <!-- bootstrap icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <link href='https://fonts.googleapis.com/css?family=Quattrocento Sans' rel='stylesheet'>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+ 
+    <?!= include('[CSS]Style'); ?> <!--INCLUDE [CSS]Style.html FILE-->
+    
+  </head>
+ 
+  <body>
+    {{NAV_SIDEBAR}}
+
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+      <div class="nav-body">
+
+        <!-- Page Title -->
+        <div class="page-title">
+          <span class="rfq-type-tag">KR</span>
+          <span class="create-rfq-title"> Create RFQ</span>
+          <span class="edit-rfq-title d-none"> Edit <span class="edit-rfq-type">RFQ</span> <span class="edit-rfq-id"></span></span>
+        </div>
+
+        <!-- Nav bar buttons -->
+        <div style="margin-left:auto;">
+
+          <div class="btn-group save-btn-group">
+            <button type="button" class="btn-hover color-blue main-save-btn" id="saveAll"><span class="spinner spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><i class="bi bi-floppy" style="font-size: 13px;"></i>&nbsp;&nbsp;Save RFQ</button>
+            <button type="button" class="btn btn-hover dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+              <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#" id="saveDraft"><i class="bi bi-file-earmark-text" style="font-size: 12px;"></i>&nbsp;&nbsp;Save as draft</a></li>
+              <li class="d-none"><a class="dropdown-item" href="#" id="updateAll"><i class="bi bi-card-checklist" style="font-size: 12px;"></i>&nbsp;&nbsp;Update</a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </nav>
+    <!-- Main body -->
+    <div class="main-body">
+      <div class="row">
+        <div class="col-8" style="padding-left:8px !important;padding-right:8px !important;">
+          <!-- Quotation form -->
+          <div class="card shadow-sm">
+            <div class="card-header" style="background:none;font-size:1.2rem;font-weight: 500;padding:0.75rem !important;">
+              <div style="color:#3d3d43;float:left;display:inline-block;vertical-align:bottom;margin-right:20px;">Quotation form</div>
+              <div style="float:right;">
+                <button id="clearForm" class="btn btn-light btn-sm" style="background-color:white;position:relative;font-size:65% !important;"><i class="fa fa-refresh" style="color: #6c757d;font-size:12.5px;" aria-hidden="true"></i></button>&nbsp;
+                <!-- <button id="loadAll" class="btn btn-outline-secondary btn-sm" style="position:relative;font-size: 65% !important;">Load</button> -->
+              </div>
+            </div>
+            <div class="card-body">
+              <iframe name="hidden-iframe" style="position: absolute; visibility: hidden" sandbox="allow-top-navigation allow-scripts allow-forms allow-same-origin"></iframe><!-- sandbox="allow-top-navigation allow-scripts allow-forms allow-same-origin" -->
+              <!-- use for Live Link V2 -->
+              <form id="quoteForm" onsubmit="handleFormSubmit(this)" method="POST" action="https://script.google.com/macros/s/AKfycbzR4C6JvphST5AY-i8Gzpv1ECapoC0pwl4Xyv8qx4i2Mv8sIO8chVT4fKumq_VCIVr4/exec" target="hidden-iframe">
+                
+                <div class="row">
+                  <div class="form-group position-relative col-2">
+                    <label for="dateSelect"><span lang="ko">견적 날짜</span><span lang="en">RFQ Date</span> <span style="color:#cc2b4f;">*</span></label><br>
+                    <input type="text" class="form-control form-control-sm" name="Date" id="dateSelect" readonly required/>
+                    <i class="bi bi-calendar4"></i>
+                  </div>
+                  <div class="form-group col-2">
+                    <label for="managerSelect"><span lang="ko">세일즈 담당</span><span lang="en">Owner</span> <span style="color:#cc2b4f;">*</span></label><br>
+                    <select class="form-control form-control-sm selectpicker show-tick" name="Owner" id="managerSelect" title="Choose" required>
+                      <option>User 1</option>
+                      <option>User 2</option>
+                      <option>User 3</option>
+                      <option>User 4</option>
+                      <option>User 5</option>
+                    </select>
+                  </div>
+                  <div class="form-group col-2">
+                    <label for="countrySelect"><span lang="ko">국가</span><span lang="en">Country</span> <span style="color:#cc2b4f;">*</span></label><br>
+                    <select class="form-control form-control-sm selectpicker show-tick" name="Country" id="countrySelect" title="Choose" data-live-search="true" required>
+                    </select>
+                  </div>
+                  <div class="form-group col-2">
+                    <label for="typeSelect"><span lang="ko">구분</span><span lang="en">Project type</span> <span style="color:#cc2b4f;">*</span></label><br>
+                    <select class="form-control form-control-sm selectpicker show-tick" name="Project type" id="typeSelect" title="Choose" required>
+                      <option>Type 1</option>
+                      <option>Type 2</option>
+                      <option>Type 3</option>
+                      <option>Type 4</option>
+                      <option>Others</option>
+                    </select>
+                  </div>
+                  <div class="form-group col-2">
+                    <label for="trapQuestion"><span lang="ko">검증문항</span><span lang="en" style="overflow: hidden;white-space: nowrap;">Trap question</span></label><br>
+                    <select class="form-control form-control-sm selectpicker show-tick" name="Trap question" id="trapQuestion" title="Choose">
+                      <option style="display:none;"></option>
+                      <option>1</option>
+                      <option>2</option>
+                    </select>
+                  </div>
+                  <div class="form-group col-2">
+                    <label for="specialPanel"><span lang="ko">특수옵션</span><span lang="en" style="overflow: hidden;white-space: nowrap;">Special option</span></label><br>
+                    <select class="form-control form-control-sm selectpicker show-tick" name="Special option" id="specialPanel" title="Choose">
+                      <option style="display:none;"></option>
+                      <option>Option 1</option>
+                      <option>Option 2</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-8">
+                    <label for="projectName"><span lang="ko">프로젝트명 (메일 제목)</span><span lang="en">Project name (Mail title)</span> <span style="color:#cc2b4f;">*</span></label>
+                    <div class="input-group">
+                        <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Sync Gmail" type="button" id="refreshGmail"><span class="spinner spinner-border spinner-border-sm" role="status" style="width: 1rem;height: 1rem;" aria-hidden="true"></span><span style="font-size:18px;"><i class="bi bi-envelope-arrow-down"></i></span></button>
+                      <input type="text" class="form-control form-control-sm" name="Project name (Mail title)" id="projectName" required>
+                    </div>
+                  </div>
+                  <div class="form-group col-4">
+                    <label for="clientSelect"><span lang="ko">클라이언트</span><span lang="en">Client</span> <span style="color:#cc2b4f;">*</span></label><br>
+                    <select class="form-control form-control-sm selectpicker show-tick" name="Client" id="clientSelect" title="Choose" data-live-search="true" required>
+                      
+                      <optgroup label="Other">
+                        <option>Other</option>
+                      </optgroup>
+                    </select>
+                  </div>  
+                </div>
+                <div class="row">
+                  <div class="form-group col-4">
+                    <label for="picName"><span lang="ko">고객명</span><span lang="en">Client name</span></label>
+                    <input type="text" class="form-control form-control-sm" name="Client name" id="picName">
+                  </div>
+                  <div class="form-group col-8">
+                    <label for="targetCondition"><span lang="ko">대상자 조건</span><span lang="en">Targeting condition</span></label>
+                    <input type="text" class="form-control form-control-sm" name="Targeting condition" id="targetCondition">
+                  </div>
+                  
+                </div>
+                <div class="row">
+                  <div class="form-group col">
+                    <label for="irInput">IR (%) <span style="color:#cc2b4f;">*</span></label>
+                    <div class="input-group">
+                      <input type="text" class="input-number form-control form-control-sm" name="Estimate IR" id="irInput" required>
+                    </div>
+                    <div class="invalid-tooltip invalid-tooltip-ir">
+                      Please enter number 0~100.
+                    </div>
+                  </div>
+                  <div class="form-group col">
+                    <label for="loiInput">LOI (min) <span style="color:#cc2b4f;">*</span></label>
+                    <div class="input-group">
+                      <input type="text" class="input-number form-control form-control-sm" name="LOI" id="loiInput" required>
+                    </div>
+                    <div class="invalid-tooltip invalid-tooltip-loi">
+                      Please enter number 0~<span id="maxLoi">60</span>.
+                    </div>
+                  </div>
+                  <div class="form-group col">
+                    <label for="compPt"><span lang="ko">완료 포인트</span><span lang="en">Complete points</span> <span style="color:#cc2b4f;">*</span></label>
+                    <div class="input-group">
+                      <input type="text" class="input-number form-control form-control-sm" name="Complete points" id="compPt" required>
+                    </div>
+                  </div>
+                  <div class="form-group col" style="margin-bottom:0;">
+                    <label for="cpiValue">CPI <span style="color:#cc2b4f;">*</span> <span style="color:gray;font-size:85%;"><i>(Actual CPI = <span class="showActualCPI"></span>)</i></span></label>
+                    <div class="input-group">
+                      <input type="text" class="input-number form-control form-control-sm" name="CPI" id="cpiValue" required>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col">
+                    <label for="sampleNum"><span lang="ko">요청 샘플수</span><span lang="en">Requested N</span> <span style="color:#cc2b4f;">*</span></label>
+                    <div class="input-group">
+                        <div class="input-group-text" style="background-color:white !important;">
+                          <input type="radio" class="form-check-input mt-0" name="Calculation method" value="Requested N" required>
+                        </div>
+                      <input type="text" class="input-number form-control form-control-sm" name="Requested N" id="sampleNum" required>
+                    </div>
+                  </div>
+                  <div class="form-group col">
+                    <label for="possibleNum"><span lang="ko">가능수</span><span lang="en">Feasible N</span> <span style="color:#cc2b4f;">*</span></label>
+                    <div class="input-group">
+                        <div class="input-group-text" style="background-color:white !important;">
+                          <input type="radio" class="form-check-input mt-0" name="Calculation method" value="Feasible N" required>
+                        </div>
+                      <input type="text" class="input-number form-control form-control-sm" name="Feasible N" id="possibleNum" required>
+                    </div>
+                  </div>
+                  <div class="form-group col">
+                    <label for="questionNum"><span lang="ko">문항 수</span><span lang="en">Question N</span></label>
+                    <input type="text" class="input-number form-control form-control-sm" name="Question N" id="questionNum">
+                  </div>
+                  <div class="form-group col">
+                    <label for="pageNum"><span lang="ko">설문 페이지수</span><span lang="en">Page N</span></label>
+                    <input type="text" class="input-number form-control form-control-sm" name="Page N" id="pageNum">
+                  </div>
+                  <div class="form-group col">
+                    <label for="webupCost"><span lang="ko">웹업비</span><span lang="en">Prog. fee</span></label>
+                    <input type="text" class="input-number form-control form-control-sm" name="Programming fee" id="webupCost">
+                  </div>
+                  <div class="form-group col">
+                    <label for="operationCost"><span lang="ko">운영비</span><span lang="en">Other fee</span></label>
+                    <input type="text" class="input-number form-control form-control-sm" name="Other fee" id="operationCost">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col form-check form-switch operation-type-switch">
+                    <input type="checkbox" class="form-check-input" role="switch" id="otherFeeSwitch" name="Other fee switch">
+                    <label class="form-check-label" for="otherFeeSwitch"><span lang="ko">운영비 항목</span><span lang="en">Other fee options</span></label>
+                  </div>
+                </div>
+                <div id="otherFeeBox">
+                  <table id="otherFeeTable">
+                    <tbody>
+                      <tr>
+                        <td class="checkbox-option-label" width="10%"><b>Group A</b></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td class="checkbox-option-label"><b>Group B</b></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td class="checkbox-option-label"><b>Group C</b></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td class="checkbox-option-label"><b>Others</b></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td class="checkbox-option-label"><b>ETC</b></td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                
+                <div class="row">
+                  <div class="col form-check form-switch partner-use-switch">
+                    <input type="checkbox" class="form-check-input" role="switch" id="partnerUseSwitch" name="3rd party Usage">
+                    <label class="form-check-label" for="partnerUseSwitch"><span lang="ko">파트너이용</span><span lang="en">3rd party Usage</span></label>
+                  </div>
+                  <div align="right" class="col-2" style="display:none;margin-bottom:0.5rem !important;">
+                    <select class="form-select form-selected-sm" id="partnerUseBoxCnt" name="3rd party Usage count" style="width:50% !important;height: 1.75rem !important;padding: 0.15rem 0.5rem !important;font-size:14px !important;">
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                    </select>
+                  </div>
+                </div>
+                <div id="partnerUseBox">
+                  <fieldset class="scheduler-border" style="margin-top:0 !important;">
+                    <legend class="scheduler-border">Partner ①</legend>
+                    <div class="control-group">
+                      <div class="row">
+                        <div class="form-group col">
+                          <label for="partnerName_1"><span lang="ko">파트너명</span><span lang="en">3rd party name</span></label>
+                          <input type="text" class="form-control form-control-sm" name="3rd party name_1" id="partnerName_1">
+                        </div>
+                        <div class="form-group col">
+                          <label for="sampleDiff_1"><span lang="ko">부족 샘플수</span><span lang="en">Needed N</span></label>
+                          <input type="text" class="input-number form-control form-control-sm" name="Needed N_1" id="sampleDiff_1">
+                        </div>
+                        <div class="form-group col">
+                          <label for="3rdpartyCPI_1">3rd party CPI</label>
+                          <input type="text" class="input-number form-control form-control-sm" name="3rd party CPI_1" id="3rdpartyCPI_1">
+                        </div>
+                        <div class="form-group col">
+                          <label for="3rdpartyOperation_1">3rd party <span lang="ko">운영비</span><span lang="en">fee</span></label>
+                          <input type="text" class="input-number form-control form-control-sm" name="3rd party fee_1" id="3rdpartyOperation_1">
+                        </div>
+                        <div class="form-group col">
+                          <label for="3rdpartyCost_1">3rd party <span lang="ko">비용</span><span lang="en">costs</span></label>
+                          <input type="text" class="input-number form-control form-control-sm" name="3rd party costs_1" id="3rdpartyCost_1">
+                        </div>
+                      </div>
+                    </div>
+                  </fieldset>
+                  <fieldset class="scheduler-border">
+                    <legend class="scheduler-border">Partner ②</legend>
+                    <div class="control-group">
+                      <div class="row">
+                        <div class="form-group col">
+                          <label for="partnerName_2"><span lang="ko">파트너명</span><span lang="en">3rd party name</span></label>
+                          <input type="text" class="form-control form-control-sm" name="3rd party name_2" id="partnerName_2">
+                        </div>
+                        <div class="form-group col">
+                          <label for="sampleDiff_2"><span lang="ko">부족 샘플수</span><span lang="en">Needed N</span></label>
+                          <input type="text" class="input-number form-control form-control-sm" name="Needed N_2" id="sampleDiff_2">
+                        </div>
+                        <div class="form-group col">
+                          <label for="3rdpartyCPI_2">3rd party CPI</label>
+                          <input type="text" class="input-number form-control form-control-sm" name="3rd party CPI_2" id="3rdpartyCPI_2">
+                        </div>
+                        <div class="form-group col">
+                          <label for="3rdpartyOperation_2">3rd party <span lang="ko">운영비</span><span lang="en">fee</span></label>
+                          <input type="text" class="input-number form-control form-control-sm" name="3rd party fee_2" id="3rdpartyOperation_2">
+                        </div>
+                        <div class="form-group col">
+                          <label for="3rdpartyCost_2">3rd party <span lang="ko">비용</span><span lang="en">costs</span></label>
+                          <input type="text" class="input-number form-control form-control-sm" name="3rd party costs_2" id="3rdpartyCost_2">
+                        </div>
+                      </div>
+                    </div>
+                  </fieldset>
+                  <fieldset class="scheduler-border">
+                    <legend class="scheduler-border">Partner ③</legend>
+                    <div class="control-group">
+                      <div class="row">
+                        <div class="form-group col">
+                          <label for="partnerName_3"><span lang="ko">파트너명</span><span lang="en">3rd party name</span></label>
+                          <input type="text" class="form-control form-control-sm" name="3rd party name_3" id="partnerName_3">
+                        </div>
+                        <div class="form-group col">
+                          <label for="sampleDiff_3"><span lang="ko">부족 샘플수</span><span lang="en">Needed N</span></label>
+                          <input type="text" class="input-number form-control form-control-sm" name="Needed N_3" id="sampleDiff_3">
+                        </div>
+                        <div class="form-group col">
+                          <label for="3rdpartyCPI_3">3rd party CPI</label>
+                          <input type="text" class="input-number form-control form-control-sm" name="3rd party CPI_3" id="3rdpartyCPI_3">
+                        </div>
+                        <div class="form-group col">
+                          <label for="3rdpartyOperation_3">3rd party <span lang="ko">운영비</span><span lang="en">fee</span></label>
+                          <input type="text" class="input-number form-control form-control-sm" name="3rd party fee_3" id="3rdpartyOperation_3">
+                        </div>
+                        <div class="form-group col">
+                          <label for="3rdpartyCost_3">3rd party <span lang="ko">비용</span><span lang="en">costs</span></label>
+                          <input type="text" class="input-number form-control form-control-sm" name="3rd party costs_3" id="3rdpartyCost_3">
+                        </div>
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+                <div class="row">
+                  <div class="col form-check form-switch sop-use-switch">
+                    <input type="checkbox" class="form-check-input" role="switch" id="sopUseSwitch" name="SOP Usage">
+                    <label class="form-check-label" for="sopUseSwitch"><span lang="ko">SOP 이용</span><span lang="en">SOP Usage</span></label>
+                  </div>
+                </div>
+                <div id="sopUseBox" style="display:none;padding-top:5px;padding-bottom:5px;">
+                  <div class="form-check form-check-inline">
+                      <input type="checkbox" class="form-check-input sop-checkbox-option" id="sopSOP_1" value="SOP_1">
+                      <label class="form-check-label sop-label" for="sopSOP_1">SOP_1</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                      <input type="checkbox" class="form-check-input sop-checkbox-option" id="sopSOP_2" value="SOP_2">
+                      <label class="form-check-label sop-label" for="sopSOP_2">SOP_2</label>
+                  </div>
+                </div>
+                <div id="sopUseBoxInput" class="row">
+                  <div class="fieldset-container col-6" id="sop_1UseBoxInput">
+                    <fieldset class="scheduler-border">
+                      <legend class="scheduler-border">SOP_1</legend>
+                      <div class="control-group">
+                        <div class="row">
+                          <div class="form-group col">
+                            <label for="sop_1Needed"><span lang="ko">SOP_1 샘플수</span><span lang="en">SOP_1 Needed N</span></label>
+                            <input type="text" class="input-number form-control form-control-sm" name="SOP_1 Needed N" id="sop_1Needed">
+                          </div>
+                          <div class="form-group col">
+                            <label for="sop_1CPI">SOP_1 CPI</label>
+                            <input type="text" class="input-number form-control form-control-sm" name="SOP_1 CPI" id="sop_1CPI">
+                          </div>
+                          <div class="form-group col">
+                            <label for="sop_1Cost"><span lang="ko">SOP_1 비용</span><span lang="en">SOP_1 Costs</span></label>
+                            <input type="text" class="input-number form-control form-control-sm" name="SOP_1 Costs" id="sop_1Cost">
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                  <div class="fieldset-container col-6" id="sop_2UseBoxInput">
+                    <fieldset class="scheduler-border">
+                      <legend class="scheduler-border">SOP_2</legend>
+                      <div class="control-group">
+                        <div class="row">
+                          <div class="form-group col">
+                            <label for="sop_2Needed" style="margin-right: -6px;margin-left: -1px;"><span lang="ko">SOP_2 샘플수</span><span lang="en">SOP_2 Needed N</span></label>
+                            <input type="text" class="input-number form-control form-control-sm" name="SOP_2 Needed N" id="sop_2Needed">
+                          </div>
+                          <div class="form-group col">
+                            <label for="sop_2CPI">SOP_2 CPI</label>
+                            <input type="text" class="input-number form-control form-control-sm" name="SOP_2 CPI" id="sop_2CPI">
+                          </div>
+                          <div class="form-group col">
+                            <label for="sop_2Cost"><span lang="ko">SOP_2 비용</span><span lang="en">SOP_2 Costs</span></label>
+                            <input type="text" class="input-number form-control form-control-sm" name="SOP_2 Costs" id="sop_2Cost">
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+                <!-- Hidden inputs -->
+                <div style="display:none">
+                  <input type="hidden" name="Other fee options" id="otherFee">
+                  <input type="hidden" name="Actual CPI" id="actualCPI">
+                  <input type="hidden" name="Group" id="selectedGroup">
+                  <input type="hidden" name="SC" id="scCount">
+                  <input type="hidden" name="QF" id="qfCount">
+                  <input type="hidden" name="Point fee (C+SC+QF)" id="ptCost">
+                  <input type="hidden" name="Expected sales (without tax)" id="quoteEstimate">
+                  <input type="hidden" name="GM (%)" id="profitRate">
+                  <input type="hidden" name="GM" id="netIncome">
+                  <input type="hidden" name="Total 3rd party costs" id="totalPartnerCost">
+                  <input type="hidden" name="Total SOP costs" id="totalSOPCost">
+                  <input type="hidden" name="Last submit type" id="formType" value="save">
+                  <input type="hidden" name="RFQ type" id="rfqType" value="KR">
+                  <input type="hidden" name="RFQ ID" id="rfqId">
+                </div>
+              </form>
+
+              <!-- Add Client Modal -->
+              <div class="modal fade" id="addClientModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addClientModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="addClientModalLabel">Other client</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="row">
+                        <div class="form-group col">
+                          <label for="clientName"><span lang="ko">클라이언트</span><span lang="en">Client</span></label>
+                          <input type="text" class="form-control form-control-sm" name="Other client" id="clientName">
+                        </div>
+                        <div class="form-group col">
+                          <label for="clientGroup"><span lang="ko">그룹</span><span lang="en">Group</span></label><br>
+                          <select class="form-control form-control-sm selectpicker show-tick" name="Other client group" id="clientGroup" data-container="#addClientModal" title="Choose">
+                            
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-primary btn-sm" id="saveOtherClient">Add</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br>
+          <!-- Calculated quotation -->
+          <div class="card shadow-sm">
+            <div class="card-header" style="background:none;font-size:1.2rem;font-weight: 500;padding:0.75rem !important;">
+              <div style="float:left;"><span style="color:#3d3d43;">Calculated quotation </span>
+              </div>
+              <div style="float:right;"><button id="clearCalc" class="btn btn-light btn-sm" style="background-color:white;position:relative;font-size:65% !important;"><i class="fa fa-refresh" style="color: #6c757d;font-size:12.5px;" aria-hidden="true"></i></button>&nbsp;<button id="calcAll" class="btn btn-outline-secondary btn-sm" style="position:relative;font-size: 65% !important;">Calculate</button></div>
+            </div>
+            <div class="card-body" style="font-size:14px;">
+              <table id="calcResultTable" class="table table-sm table-hover">
+                  <thead align="center">
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col"><span lang="ko">CPI</span><span lang="en">CPI</span></th>
+                      <th scope="col">
+                        <div class="resultTableTooltip" lang="ko" data-bs-toggle="tooltip" data-bs-placement="top" title="가능수 * (1 - IR) / IR">SC 개수</div>
+                        <div class="resultTableTooltip" lang="en" data-bs-toggle="tooltip" data-bs-placement="top" title="Feasible N * (1 - IR) / IR">SC</div>
+                      </th>
+                      <th scope="col">
+                        <div class="resultTableTooltip" lang="ko" data-bs-toggle="tooltip" data-bs-placement="top" title="SC / 5">QF 개수</div>
+                        <div class="resultTableTooltip" lang="en" data-bs-toggle="tooltip" data-bs-placement="top" title="SC / 5">QF</div>
+                      </th>
+                      <th scope="col"><span lang="ko">총<br>파트너비용</span><span lang="en">Total 3rd<br>party costs</span></th>
+                      <th scope="col"><span lang="ko">총<br>SOP비용</span><span lang="en">Total<br>SOP costs</span></th>
+                      <th scope="col">
+                        <div class="resultTableTooltip" lang="ko" data-bs-toggle="tooltip" data-bs-placement="top" title="(완료포인트 * 가능수) + (SC * 50) + (QF * 50)">포인트비용<br>(완료+SC+QF)</div>
+                        <div class="resultTableTooltip" lang="en" data-bs-toggle="tooltip" data-bs-placement="top" title="(Complete points * Feasible N) + (SC * 50) + (QF * 50)">Point fee<br>(C+SC+QF)</div>
+                      </th>
+                      <th scope="col">
+                        <div class="resultTableTooltip" lang="ko" data-bs-toggle="tooltip" data-bs-placement="top" title="(요청 샘플수 * CPI) + 웹업비 + 운영비">견적<br>(부가세 별도)</div>
+                        <div class="resultTableTooltip" lang="en" data-bs-toggle="tooltip" data-bs-placement="top" title="(Requested N * CPI) + Programming fee + Other Fee">Expected sales<br>(without tax)</div>
+                      </th>
+                      <th scope="col">
+                        <div class="resultTableTooltip" lang="ko" data-bs-toggle="tooltip" data-bs-placement="top" title="(견적 - ((총 파트너비용 + 총 SOP비용) + (포인트비용 * 1))) / 견적">GM (%)</div>
+                        <div class="resultTableTooltip" lang="en" data-bs-toggle="tooltip" data-bs-placement="top" title="(Expected sales - ((Total 3rd party costs + Total SOP costs) + (Point fee * 1))) / Expected sales">GM (%)</div>
+                      </th>
+                      <th scope="col">
+                        <div class="resultTableTooltip" lang="ko" data-bs-toggle="tooltip" data-bs-placement="top" title="견적 - ((포인트비용 * 1) + (총 파트너비용 + 총 SOP비용))">GM</div>
+                        <div class="resultTableTooltip" lang="en" data-bs-toggle="tooltip" data-bs-placement="top" title="Expected sales - ((Point fee * 1) + (Total 3rd party costs + Total SOP costs))">GM</div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody align="center">
+                  </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!-- Quote table -->
+        <div class="col" style="padding-left:8px !important;padding-right:8px !important;">
+          <div class="card shadow-sm">
+            <div class="card-header" style="background:none;font-size:1.2rem;font-weight: 500;padding:0.75rem !important;">
+              <div style="float:left;color:#3d3d43;">Quote table</div>
+              <div style="float:right;"><button id="clearTable" class="btn btn-light btn-sm" style="background-color:white;position:relative;font-size:65% !important;"><i class="fa fa-refresh" style="color: #6c757d;font-size:12.5px;" aria-hidden="true"></i></button>&nbsp;<button id="generateTable" class="btn btn-outline-secondary btn-sm" style="font-size: 65% !important;">Generate</button></div>
+            </div>
+            <div align="center" style="padding:0.5rem 0.75rem 0.75rem 0.75rem;">
+              <div align="right"><button type="button" class="btn btn-outline-primary btn-sm" id="copy-button" data-bs-toggle="tooltip" data-bs-placement="left" title="Copy to Clipboard" style="margin-bottom:0.5rem;padding:0.25rem 0.5rem !important;font-size: 65% !important;">Copy</button></div>
+              <div id="quoteTable_Container">
+                <table id="quoteTable" class="tg" border="0" cellspacing="0" cellpadding="0" width="100%" style="white-space:nowrap !important; max-width:350pt !important;font-size:9.5pt !important;">
+                  <colgroup>
+                      <col style="width:43%;">
+                      <col style="width:14%;">
+                      <col style="width:19%;">
+                      <col style="width:24%;">
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th class="tg-2p8v"><span style="font-weight:700;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Description</span></th>
+                      <th class="tg-2p8v"><span style="font-weight:700;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Qty</span></th>
+                      <th class="tg-2p8v"><span style="font-weight:700;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Price</span></th>
+                      <th class="tg-2p8v"><span style="font-weight:700;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Total</span></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="quoteRow2">
+                      <td class="tg-ycr8"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000">Usage fee</span></td>
+                      <td class="tg-i81m"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000"></span></td>
+                      <td class="tg-cwv5"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000"></span></td>
+                      <td class="tg-cwv5"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000"></span></td>
+                    </tr>
+                    <tr class="quoteRow3">
+                      <td class="tg-ycr8"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000">Operation fee</span></td>
+                      <td class="tg-i81m"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000"></span></td>
+                      <td class="tg-cwv5"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000"></span></td>
+                      <td class="tg-cwv5"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000"></span></td>
+                    </tr>
+                    <tr class="quoteRow1">
+                      <td class="tg-ycr8"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000">Programming fee</span></td>
+                      <td class="tg-i81m"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000"></span></td>
+                      <td class="tg-cwv5"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000"></span></td>
+                      <td class="tg-cwv5"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000"></span></td>
+                    </tr>
+                    <tr class="quoteRow4">
+                      <td class="tg-kxn2" colspan="3"><span style="font-weight:700;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Subtotal (excl VAT)</span></td>
+                      <td class="tg-bj79"><span style="font-weight:700;font-style:normal;text-decoration:none;color:#000;background-color:transparent"></span></td>
+                    </tr>
+                    <tr class="quoteRow5">
+                      <td class="tg-bd3b" colspan="3"><span style="font-weight:700;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Total (incl VAT)</span></td>
+                      <td class="tg-qxa8"><span style="font-weight:700;font-style:normal;text-decoration:none;color:#000;background-color:transparent"></span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <br>
+          <!-- Information images (대학) -->
+          <div class="card shadow-sm border-info">
+              <div class="card-header card-header-info">
+                <i class="fa fa-info-circle" style="color:#8317b8"> </i>
+              </div>
+              <center>
+                <br>
+                Reference information goes here.
+              </center>
+              <div class="info-img info-img-r1">
+                <img id="showImg2" src="" />
+                <img id="showImg3" src="" />
+              </div>
+              <div class="info-img info-img-r2">
+
+                <img id="showImg4" src="" />
+              </div>
+          </div>
+          <br>
+          <!-- 사용 예외사항 -->
+          <div class="card shadow-sm border-warning">
+            <div class="row no-gutters" style="margin-left: 0 !important;">
+              <div class="col-2 card-header-exclamation">
+                <i class="fa fa-exclamation-triangle" style="color:#fabc09"> </i>
+              </div>
+              <div class="col">
+                <div class="card-body" style="opacity:80%;padding:0.5rem !important;">
+                  <center><div style="margin-bottom:0.25rem;font-size:13px !important;"><b>[Exceptions]</b></div></center>
+                  <div class="card-text">
+                    <ul style="margin-left:40px;margin-bottom:0;font-size:12px;">
+                      <li>Exception 1</li> 
+                      <li>Exception 2</li> 
+                      <li>Exception 3</li>
+                      <li>Exception 4</li>
+                      <li>Exception 5</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {{FOOTER}}
+
+    <!-- Warning Alert Popup -->
+    <div class="modal fade" id="warningAlert" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="warningAlertLabel" aria-hidden="true">
+      <div class="modal-dialog" style="max-width:450px;">
+        <div class="modal-content shadow-lg" style="border-radius:10px;">
+          <div class="modal-header" style="padding: 1rem 1rem 0.1rem 1rem;border-bottom: none;">
+            <h5 class="modal-title" id="warningAlertLabel" style="font-size:18px;">Please check</h5>
+          </div>
+          <div class="modal-body" style="padding: 0.5rem 1rem 0.5rem 1rem;">
+            <div id="alertMessage" style="font-size:14px;"></div>
+          </div>
+          <div class="modal-footer" style="padding: 1rem;border-top: none;">
+            <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal" style="margin:0;padding-left:0.8rem;padding-right:0.8rem;">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirm Alert Popup -->
+    <div class="modal fade" id="confirmAlert" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="confirmAlertLabel" aria-hidden="true">
+      <div class="modal-dialog" style="max-width:450px;">
+        <div class="modal-content shadow-lg" style="border-radius:10px;">
+          <div class="modal-header" style="padding: 1rem 1rem 0.1rem 1rem;border-bottom: none;">
+            <h5 class="modal-title" id="confirmAlertLabel" style="font-size:18px;">Please confirm</h5>
+          </div>
+          <div class="modal-body" style="padding: 0.5rem 1rem 0.5rem 1rem;">
+            <div id="confirmMessage" style="font-size:14px;"></div>
+          </div>
+          <div class="modal-footer" style="padding: 1rem;border-top: none;">
+            <button type="button" class="btn btn-sm modal-alert-btn-cancel" data-bs-dismiss="modal" style="margin:0;padding-left:0.8rem;padding-right:0.8rem;">Cancel</button>
+            <button type="button" class="btn btn-primary btn-sm modal-alert-btn-confrim" data-bs-dismiss="modal" style="margin:0;padding-left:0.8rem;padding-right:0.8rem;">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Backdrop -->
+    <div id="toastBackdrop" class="toast-backdrop d-none"></div>
+    <!-- Success/Fail message popup -->
+    <div class="toast-container position-fixed p-3" style="z-index: 9999; left: 50%; top: 5px;width:350px;margin-left:-175px;">
+      <div id="successToast" class="toast fade hide shadow" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" tabindex="-1"><!--data-bs-delay="3000"-->
+        <div class="toast-header">
+          <!-- <img src="..." class="rounded mr-2" alt="..."> -->
+          <strong class="mr-auto" style="color:#00b5cb;font-size:115%;"><i class="fa fa-check-circle-o" style="font-size:18px;" aria-hidden="true"></i> <span id="successAlertType1"></span>d!</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" style="color:gray;font-size:90%;">
+          Your RFQ has been <span id="successAlertType2"></span>d successfully.<br>
+          <a href="https://script.google.com/macros/s/AKfycbzR4C6JvphST5AY-i8Gzpv1ECapoC0pwl4Xyv8qx4i2Mv8sIO8chVT4fKumq_VCIVr4/exec?mode=List-KR" target="_blank">Go to RFQ List.</a>
+        </div>
+      </div>
+      <div id="failToast" class="toast fade shadow" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" tabindex="-1">
+        <div class="toast-header">
+          <strong class="mr-auto" style="color:#cc2b4f;font-size:115%;"><i class="fa fa-times-circle-o" style="font-size:18px;" aria-hidden="true"></i> Failed..</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" style="color:gray;font-size:90%;">
+          <span class="fail-error-message"></span>
+        </div>
+      </div>
+    </div>
+    
+    
+    <!--jQuery & jQueryUI cdn -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js" integrity="sha256-J8ay84czFazJ9wcTuSDLpPmwpMXOm573OUtZHPQqpEU=" crossorigin="anonymous"></script>
+
+    <!--bootstrap and popper cdn -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+
+    <!-- bootstrap select -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/js/bootstrap-select.min.js"></script> -->
+    <!-- Latest compiled and minified JavaScript -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/i18n/defaults-*.min.js"></script> -->
+    <?!= include('[JS]Bootstrap-Select.js'); ?>
+
+    <!-- moment -->
+    <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
+    <!-- Date Range Picker -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+
+    <?!= include('[JS]Navbar'); ?> <!--INCLUDE [JS]Navbar.html FILE-->
+
+    <script>
+      var loadedRfqId;
+      var rfqListHeaderArray = [];
+      var rfqListArray = [];
+      var fillInputArray = [];
+
+      google.script.url.getLocation(function(location) {
+          // 'location' object contains the query string parameters
+        var params = location.parameter;
+        if(params['rfqid'] !== undefined) {
+            loadedRfqId = params['rfqid'];
+            $('#rfqId').val(loadedRfqId);
+            $('#updateAll').closest('li').removeClass('d-none');
+
+            $('.create-rfq-title').toggleClass('d-none');
+            $('.edit-rfq-title').toggleClass('d-none');
+            $('.edit-rfq-id').text('#' + loadedRfqId);
+
+            waitLoad('#otherFeeTable td');
+            //google.script.run.withSuccessHandler(showRFQ).getRFQ();
+            runWithRetry('getRFQ', showData, GetFailAlert, 0, 3, loadedRfqId); 
+        } else if(params['draftid'] !== undefined) {
+            loadedRfqId = params['draftid'];
+
+            $('.edit-rfq-type').text('Draft');
+            $('.create-rfq-title').toggleClass('d-none');
+            $('.edit-rfq-title').toggleClass('d-none');
+            $('.edit-rfq-id').text('#' + loadedRfqId);
+
+            waitLoad('#otherFeeTable td');
+            //google.script.run.withSuccessHandler(showRFQ).getRFQ();
+            //runWithRetry('getDraft', showData, GetFailAlert); 
+            runWithRetry('getDraft', showData, GetFailAlert, 0, 3, loadedRfqId); 
+        }
+      });
+
+      function showData(dataArray) {
+        //console.log(dataArray);
+        rfqListHeaderArray = dataArray[0];
+        //rfqListArray = dataArray.find(arr => arr[0] === loadedRfqId);
+        rfqListArray = dataArray[1];
+        //console.log(rfqListHeaderArray);
+        //console.log(rfqListArray);
+        
+
+        $(document).ready(function () {
+
+            // MAKE fillInputArray INTO AN ARRAY OF OBJECTS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+            // Quotation form에 로드할 RFQ 데이터를 fillInputArray 배열에 추가 | Add the RFQ data to the fillInputArray array to load it into the Quotation form.
+            for (var j = 0; j < rfqListHeaderArray.length; j++) {
+                rfq_obj = {name: rfqListHeaderArray[j], value: rfqListArray[j]};
+                fillInputArray.push(rfq_obj);
+            }
+
+            //console.log(fillInputArray);
+
+            // Actual CPI 초기화 | Initialize Actual CPI
+            var actualCPI = 0;
+
+            // 체크박스 선택 해제 | Uncheck all checkboxes
+            $('.checkbox-option').each(function(index){
+                $(this).prop('checked', false);
+            });
+
+            $('.sop-checkbox-option').prop('checked',false);
+
+            // Calculation method 초기화 | Initialize Calculation method
+            $('input[name="Calculation method"][value="Requested N"]').prop('checked', false);
+            $('input[name="Calculation method"][value="Feasible N"]').prop('checked', false);
+
+            // fillInputArray 배열(Load RFQ Data 모달에서 선택한 RFQ 데이터)에서 각 항목을 가져와서 폼에 입력 | Retrieve each item from the fillInputArray (RFQ data selected from the Load RFQ Data modal) and input it into the form
+            fillInputArray.forEach(function (pair) {
+                var selector = `input[name="${ pair.name }"], select[name="${ pair.name }"], textarea[name="${ pair.name }"]`;
+                var input = $('#quoteForm').find(selector).not('input[type="radio"]');
+                input.val(pair.value);
+
+                // Actual CPI 값 저장 | Save Actual CPI value
+                if (pair.name == "Actual CPI") {
+                    actualCPI = pair.value;
+                }
+
+                // 운영비 항목이면 값 처리 | If it's the Other fee options item, handle the value
+                if (pair.name == "Other fee options") {
+                    if (pair.value !== '') {
+                        $('#otherFeeSwitch').prop('checked', true);
+                        $('#otherFeeBox').show();
+
+                        // 콤마로 구분된 값들을 처리하여 해당하는 운영비 항목 체크박스 선택 | Process comma-separated values to select the corresponding other fees items checkboxes.
+                        pair.value.split(',').forEach(function(item){
+                          //console.log(item)
+                            $('.checkbox-option').each(function(index){
+                                if ($(this).val() === item) {
+                                  //console.log($(this).val())
+                                    $(this).prop('checked', true);
+                                }
+                            });
+                        });
+                    } else {
+                        $('#otherFeeSwitch').prop('checked', false);
+                        $('#otherFeeBox').hide();
+                    }
+                }
+
+                if (pair.name == "SOP_1 Costs") {
+                  if (pair.value !== '') {
+                    $('#sopSOP_1').prop('checked',true);
+                    //$('#sopUseBoxInput').children().eq(0).show();
+                    $('#sop_1UseBoxInput').show();
+                  } else {
+                    $('#sopSOP_1').prop('checked',false);
+                    //$('#sopUseBoxInput').children().eq(0).hide();
+                    $('#sop_1UseBoxInput').hide();
+                  }
+                }
+
+                if (pair.name == "SOP_2 Costs") {
+                  if (pair.value !== '') {
+                    $('#sopSOP_2').prop('checked',true);
+                    //$('#sopUseBoxInput').children().eq(0).show();
+                    $('#sop_2UseBoxInput').show();
+                  } else {
+                    $('#sopSOP_2').prop('checked',false);
+                    //$('#sopUseBoxInput').children().eq(0).hide();
+                    $('#sop_2UseBoxInput').hide();
+                  }
+                }
+
+                // Calculation method 항목이면 체크박스 선택 | If it's the Calculation method item, check the radio button
+                if (pair.name == "Calculation method") {
+                    $('input[name="Calculation method"][value="' + pair.value + '"]').prop('checked', true);
+                }
+
+                // Client 항목이면 클라이언트 목록에 추가 | If it's the Client item, add to the client list
+                if (pair.name == "Client") {
+                    var loadClientArr = [];
+                    $('#clientSelect option').each(function(){
+                        if ($(this).val() !== '') {
+                            loadClientArr.push($(this).val());
+                        }
+                    });
+
+                    // 클라이언트가 목록에 없으면 추가 | If the client is not in the list, add it
+                    if (!(loadClientArr.includes(pair.value))) {
+                        var cliGrp = fillInputArray.find(o => o.name === 'Group').value;
+                        var cliIdx = $('#clientSelect').find('optgroup[label="'+cliGrp+'"]');
+
+                        cliIdx.append('<option value="'+pair.value+'">'+pair.value+'</option>');
+                        $('#clientSelect').find(":selected").prop('selected', false);
+                        cliIdx.find('option[value="'+pair.value+'"]').prop('selected', true);
+
+                        $('#clientSelect').next().children().find('.filter-option-inner-inner').text($('#clientSelect').find(":selected").val());
+                    }
+                }
+
+                // 업데이트 버튼 활성화 | Enable the update button
+                // $('#updateAll').removeClass('btn-disabled');
+                // $('#quoteForm').removeClass('was-validated');
+
+                // $('#updateAll').addClass("flash-update-btn");
+                //$('#saveAll').addClass("flash-save-btn");
+                // if(rfqModeOS !== 'OS') {
+                //     $('#saveAll').addClass("flash-save-btn");
+                // } else {
+                //     $('#save-exportAll').closest('.save-btn-group').addClass("flash-save-btn");
+                // }
+            });
+
+            // 이전에 선택된 값들 저장 | Save previously selected values
+            previousS = $("#specialPanel").prop('selectedIndex');
+            previousT = $("#trapQuestion").prop('selectedIndex');
+
+            // Actual CPI 값 표시 | Display Actual CPI value
+            $('.showActualCPI').text(AddComma(actualCPI));
+
+            // 셀렉트피커 리프레시 | Refresh the selectpicker
+            $('.selectpicker').selectpicker('refresh');
+
+            // 파트너 사용 여부 확인 | Check if partners are used
+            var noPartners = true;
+            var partnerBoxCnt;
+            $('#partnerUseBox').find('input').each(function(){
+                if ($(this).val() !== "") {
+                    noPartners = false;
+
+                    // 파트너 사용 중이면 상자 표시 | If partners are in use, show the boxes
+                    if ($(this).attr('id').split('_')[1] == '1') {
+                        partnerBoxCnt = 1;
+                    }
+                    if ($(this).attr('id').split('_')[1] == '2') {
+                        partnerBoxCnt = 2;
+                    }
+                    if ($(this).attr('id').split('_')[1] == '3') {
+                        partnerBoxCnt = 3;
+                    }
+                }
+            });
+
+            // 파트너 사용 중이 아니면 스위치 해제 및 상자 숨김 | If no partners are in use, uncheck the switch and hide the boxes
+            if (noPartners) {
+                $('#partnerUseSwitch').prop('checked', false);
+                $('#partnerUseBox').children().hide();
+                $('#partnerUseBoxCnt').prop('selectedIndex', 0);
+                $('#partnerUseBoxCnt').parent().hide();
+                $('#partnerUseBox').removeClass('partnerusebox-bottom-margin');
+            } else {
+                // 파트너 사용 중이면 스위치 설정 및 상자 표시 | If partners are in use, set the switch and show the boxes
+                $('#partnerUseSwitch').prop('checked', true);
+                $('#partnerUseBoxCnt').parent().show();
+                $('#partnerUseBoxCnt').prop('selectedIndex', partnerBoxCnt - 1);
+                $('#partnerUseBox').addClass('partnerusebox-bottom-margin');
+
+                // 파트너 상자 수에 따라 상자 표시 여부 설정 | Show or hide boxes based on the number of partner boxes
+                if (partnerBoxCnt == 1) {
+                    $('#partnerUseBox').children().eq(0).show();
+                    $('#partnerUseBox').children().eq(1).hide();
+                    $('#partnerUseBox').children().eq(2).hide();
+                }
+                if (partnerBoxCnt == 2) {
+                    $('#partnerUseBox').children().eq(0).show();
+                    $('#partnerUseBox').children().eq(1).show();
+                    $('#partnerUseBox').children().eq(2).hide();
+                }
+                if (partnerBoxCnt == 3) {
+                    $('#partnerUseBox').children().eq(0).show();
+                    $('#partnerUseBox').children().eq(1).show();
+                    $('#partnerUseBox').children().eq(2).show();
+                }
+            }
+
+            var noSOP = true;
+
+            $('#sopUseBoxInput').find("input[name$='Costs']").each(function(){
+              if($(this).val() !== '') {
+                noSOP = false;
+              }
+            })
+
+            if(noSOP) {
+              $('#sopUseSwitch').prop('checked', false);
+              $('#sopUseBox').hide();
+            } else {
+              $('#sopUseSwitch').prop('checked', true);
+              $('#sopUseBox').show();
+            }
+
+            // RFQ 목록 드롭다운 선택 초기화 | Refresh the RFQ list selection picker
+            $('#selectRFQList').selectpicker('refresh');
+        });
+      }
+    
+    </script>
+    
+    <?!= include('[JS]Functions(Common)'); ?> <!--INCLUDE [JS]Functions(Common).html FILE-->
+    <?!= include('[JS]Actions(Common)'); ?> <!--INCLUDE [JS]Actions(Common).html FILE-->
+    <?!= include('[JS]JavaScript(CreateKR)'); ?> <!--INCLUDE [JS]JavaScript(CreateKR).html FILE-->
+
+    
+  </body>
+</html>
