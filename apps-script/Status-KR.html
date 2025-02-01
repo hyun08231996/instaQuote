@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--INCLUDE REQUIRED EXTERNAL JAVASCRIPT AND CSS LIBRARIES-->
+    
+    <!-- jQuery UI -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script> -->
+   
+
+    <!-- Date Range Picker -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+    <!-- Bootstrap CSS -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous"> -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"> -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- fontawesome -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Bootstrap-select -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/css/bootstrap-select.min.css"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
+
+    <!-- Select2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <!-- Or for RTL support -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" />
+
+    <!-- DataTables -->
+    <link href="https://cdn.datatables.net/v/bs5/dt-2.1.3/sl-2.0.4/datatables.min.css" rel="stylesheet">
+    <!-- <link href="https://cdn.datatables.net/v/dt/dt-2.1.3/sl-2.0.4/datatables.min.css" rel="stylesheet"> -->
+    <link href="https://cdn.datatables.net/fixedcolumns/5.0.1/css/fixedColumns.bootstrap5.css" rel="stylesheet">
+
+    <!-- bootstrap icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <link href='https://fonts.googleapis.com/css?family=Quattrocento Sans' rel='stylesheet'>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+ 
+    <?!= include('[CSS]Style'); ?> <!--INCLUDE [CSS]Style.html FILE-->
+    
+  </head>
+ 
+  <body>
+    {{NAV_SIDEBAR}}
+
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+      <div class="nav-body">
+
+        <!-- Page Title -->
+        <div class="page-title"><span class="rfq-type-tag">KR</span> Order Status</div>
+
+      </div>
+    </nav>
+
+    <!-- Main body -->
+    <div class="main-body">
+      <div class="row">
+        <div class="card shadow-sm img-coming-soon" style="height: calc(100vh - 100px);max-height: calc(100vh - 100px);">
+        </div>
+      </div>
+    </div>
+
+    {{FOOTER}}
+
+    <!-- Warning Alert Popup -->
+    <div class="modal fade" id="warningAlert" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="warningAlertLabel" aria-hidden="true">
+      <div class="modal-dialog" style="max-width:450px;">
+        <div class="modal-content shadow-lg" style="border-radius:10px;">
+          <div class="modal-header" style="padding: 1rem 1rem 0.1rem 1rem;border-bottom: none;">
+            <h5 class="modal-title" id="warningAlertLabel" style="font-size:18px;">Please check</h5>
+          </div>
+          <div class="modal-body" style="padding: 0.5rem 1rem 0.5rem 1rem;">
+            <div id="alertMessage" style="font-size:14px;"></div>
+          </div>
+          <div class="modal-footer" style="padding: 1rem;border-top: none;">
+            <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal" style="margin:0;padding-left:0.8rem;padding-right:0.8rem;">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirm Alert Popup -->
+    <div class="modal fade" id="confirmAlert" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="confirmAlertLabel" aria-hidden="true">
+      <div class="modal-dialog" style="max-width:450px;">
+        <div class="modal-content shadow-lg" style="border-radius:10px;">
+          <div class="modal-header" style="padding: 1rem 1rem 0.1rem 1rem;border-bottom: none;">
+            <h5 class="modal-title" id="confirmAlertLabel" style="font-size:18px;">Please confirm</h5>
+          </div>
+          <div class="modal-body" style="padding: 0.5rem 1rem 0.5rem 1rem;">
+            <div id="confirmMessage" style="font-size:14px;"></div>
+          </div>
+          <div class="modal-footer" style="padding: 1rem;border-top: none;">
+            <button type="button" class="btn btn-sm modal-alert-btn-cancel" data-bs-dismiss="modal" style="margin:0;padding-left:0.8rem;padding-right:0.8rem;">Cancel</button>
+            <button type="button" class="btn btn-primary btn-sm modal-alert-btn-confrim" data-bs-dismiss="modal" style="margin:0;padding-left:0.8rem;padding-right:0.8rem;">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Backdrop -->
+    <div id="toastBackdrop" class="toast-backdrop d-none"></div>
+    <!-- Success/Fail message popup -->
+    <div class="toast-container position-fixed p-3" style="z-index: 9999; left: 50%; top: 5px;width:350px;margin-left:-175px;">
+      <div id="successToast" class="toast fade shadow" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" tabindex="-1"><!--data-bs-delay="3000"-->
+        <div class="toast-header">
+          <!-- <img src="..." class="rounded mr-2" alt="..."> -->
+          <strong class="mr-auto" style="color:#00b5cb;font-size:115%;"><i class="bi bi-check2-circle"></i> Updated!</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" style="color:gray;font-size:90%;">
+          Status for <span style="font-weight:500">RFQ #<span id="successAlertId"></span></span> was updated successfully.
+        </div>
+      </div>
+      <div id="failToast" class="toast fade shadow" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" tabindex="-1">
+        <div class="toast-header">
+          <strong class="mr-auto" style="color:#cc2b4f;font-size:115%;"><i class="bi bi-exclamation-octagon"></i> Failed..</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" style="color:gray;font-size:90%;">
+          <span class="fail-error-message"></span>
+        </div>
+      </div>
+    </div>
+
+    
+    
+    <!--jQuery & jQueryUI cdn -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js" integrity="sha256-J8ay84czFazJ9wcTuSDLpPmwpMXOm573OUtZHPQqpEU=" crossorigin="anonymous"></script>
+
+    <!--bootstrap and popper cdn -->
+    
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script> -->
+
+    <!-- bootstrap select -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/js/bootstrap-select.min.js"></script> -->
+    <!-- Latest compiled and minified JavaScript -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/i18n/defaults-*.min.js"></script> -->
+    <?!= include('[JS]Bootstrap-Select.js'); ?>
+
+    <!-- Select2 -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/v/bs5/dt-2.1.3/sl-2.0.4/datatables.min.js"></script>
+    <!-- <script src="https://cdn.datatables.net/v/dt/dt-2.1.3/sl-2.0.4/datatables.min.js"></script> -->
+    <script src="https://cdn.datatables.net/plug-ins/2.1.6/features/scrollResize/dataTables.scrollResize.min.js"></script>
+    <script src="https://cdn.datatables.net/fixedcolumns/5.0.1/js/dataTables.fixedColumns.js"></script>
+    <script src="https://cdn.datatables.net/fixedcolumns/5.0.1/js/fixedColumns.bootstrap5.js"></script>
+
+
+    <!-- moment -->
+    <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
+    <!-- Date Range Picker -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+    <?!= include('[JS]Navbar'); ?> <!--INCLUDE [JS]Navbar.html FILE-->
+    
+    <!--
+    <?!= include('[JS]Functions(Common)'); ?> 
+    <?!= include('[JS]Actions(Common)'); ?> 
+    <?!= include('[JS]JavaScript(CreateOS)'); ?> 
+    -->
+  </body>
+</html>

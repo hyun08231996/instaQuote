@@ -1,0 +1,1942 @@
+<script>
+   /**
+   * 이 기능은 [GET]Code.gs 파일에서 get_____() 함수를 호출하고 반환된 데이터를 show_____() 함수에 전달합니다. | THIS FUNCTION CALLS THE get_____() FUNCTION IN THE [GET]Code.gs FILE, AND PASS RETURNED DATA TO show_____() FUNCTION
+   */
+  runWithRetry('getCountry', showCountryOS, GetFailAlert);
+  runWithRetry('getGmailEmails', showGmailEmails, GetFailAlert);
+  if(!loadedRfqId) runWithRetry('getClient', showClient, GetFailAlert);
+
+  var vendorDataTable;
+
+  /**
+   * 이 기능은 country 데이터를 동적으로 드롭다운 목록에 로드합니다. | This function dynamically loads country data into a dropdown list.
+   */
+  function showCountryOS(dataArray){
+    $(document).ready(function(){
+        countryListOptions = [];
+        calcTotalObj = {};
+
+        function formatOption(option) {
+            if (!option.img) {
+                return option.text;
+            }
+            var optionWithImage = $(
+                '<span><img src="' +option.img + '" class="img-flag" width="20px" height="20px" /> ' + option.text + '</span>'
+            ); 
+            return optionWithImage;
+        }
+        function matchCustom(params, data) {
+          // If there are no search terms, return all of the data
+          if ($.trim(params.term) === '') {
+            return data;
+          }
+
+          // Do not display the item if there is no 'text' property
+          // if (typeof data.text === 'undefined') {
+          //   return null;
+          // }
+
+          // `params.term` should be the term that is used for searching
+          // `data.text` is the text that is displayed for the data object
+          if (data.text.toUpperCase().indexOf(params.term.toUpperCase()) > -1) {
+            return data;
+          }
+
+          // custom search using lookup data
+          if (data.keyword.toUpperCase().indexOf(params.term.toUpperCase()) > -1) {
+            return data;
+          }
+
+          // Return `null` if the term should not be displayed
+          return null;
+        }
+        
+
+        // 각 국가를 드롭다운 목록 추가 | Add each country to the dropdown list
+        for(var i=0; i<dataArray.length; i++){
+            var obj = {};
+            var flag = dataArray[i][0].toLowerCase();
+            obj['id'] = dataArray[i][0] + '-' + dataArray[i][2];
+            obj['text'] = dataArray[i][2];
+            obj['text_kr'] = dataArray[i][1];
+            obj['img'] = 'https://hatscripts.github.io/circle-flags/flags/'+ flag +'.svg';
+            obj['keyword'] = dataArray[i][3];
+            countryListOptions.push(obj);
+
+            var obj2 = {};
+            obj2[flag] = {};
+            Object.assign(calcTotalObj, obj2);
+        }
+
+        var countryList = $('#countrySelectOS').select2({
+          theme: "bootstrap-5",
+          width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
+          dropdownParent: $('#fixedInputOSModal'),
+          placeholder: $( this ).data( 'placeholder' ),
+          closeOnSelect: false,
+          allowClear: true,
+          templateResult: formatOption,
+          templateSelection: formatOption,
+          data: countryListOptions,
+          minimumResultsForSearch: Infinity,
+          scrollAfterSelect: false,
+          matcher: matchCustom
+        });
+
+        $('#countrySelectOS').find('option').each(function(){
+          const optionId = $(this).val();
+          if(!countryListOptions.some(obj => obj.id === optionId)) {
+            $('#countrySelectOS').find(`option[value="${optionId}"]`).remove();
+          }
+        });
+
+        // Update select2 to reflect the changes
+        $('#countrySelectOS').trigger('change');
+
+        //console.log(countryListOptions);
+
+        $('#refreshCountryList').find('.spinner').removeClass('spinner-busy');
+        $('#refreshCountryList').find('.spinner+span').show();
+    });
+  }
+
+  function showCountryAdd(dataArray){
+    $(document).ready(function(){
+      var existing_countries = [];
+
+      // $('#countrySelectAdd').find('option').remove();
+      // $('#countrySelectAdd').selectpicker('refresh');
+
+      $('.select-country-btn').each(function(){
+        const country_code = $(this).attr('data-bs-target').split('#v-pills-')[1].split('-')[0];
+        if(!existing_countries.includes(country_code)) existing_countries.push(country_code);
+      });
+
+      // 각 국가를 드롭다운 목록 추가 | Add each country to the dropdown list
+      for(var i=0; i<dataArray.length; i++){
+        const country_code = dataArray[i][0].toLowerCase();
+        if(!existing_countries.includes(country_code)){
+          $('#countrySelectAdd').append(`<option 
+            data-tokens="${ dataArray[i][3] }" 
+            value="${ dataArray[i][0] }-${ dataArray[i][2] }">
+            ${ dataArray[i][2] }</option>`);
+        }
+        
+      }
+
+      // 셀렉트 피커 새로고침 | Refresh the select picker
+      $('#countrySelectAdd').selectpicker('refresh');
+
+    });
+  }
+
+  function showVendors(dataArray){
+    $(document).ready(function(){
+      //console.log(dataArray);
+      vendorTableColumns = [];
+      vendorTableData = [];
+      
+      vendorTableColumns = dataArray[0].map((str, index) => ({ title : str }));
+      vendorTableData = dataArray.slice(1);
+
+      $('[id^=openVendorModal]').find('.spinner').removeClass('spinner-busy');
+      $('[id^=openVendorModal]').find('.spinner+span').show();
+      $('[id^=openVendorModal]').removeClass('disabled');
+      
+    });
+  }
+
+  // Helper function to sort the list
+  function sortCountryList($listContainer) {
+      $listContainer.scrollTop(0);
+
+      $listContainer.find('li').each(function() {
+          var idx = countryListOptions.findIndex(item => $(this).attr('id').split('-').slice(-1)[0] === item.text);
+          $(this).data('order', idx);
+      });
+
+      $listContainer.find('li').sort((a, b) => $(a).data("order") - $(b).data("order")).appendTo($listContainer);
+  }
+
+  function cloneInputFormTemplate(country) {
+    //console.log(country);
+    var $clonedTemplate  = $("#inputFormTemplate").clone();
+    var $templateContent = $($clonedTemplate.html());
+
+    //console.log($templateContent.attr('id'));
+
+    $templateContent.attr('id', 'v-pills-' + country);
+    $templateContent.attr('aria-labelledby', 'v-pills-' + country + '-tab');
+
+    $templateContent.find('input, select, a, textarea, div, table, button').each(function(){
+      if($(this).attr("id")) $(this).attr('id', $(this).attr('id') + '-' + country);
+      if($(this).attr("name")) $(this).attr('name', $(this).attr('name') + '-' + country);
+    });
+
+    $templateContent.find('label').each(function(){
+      $(this).attr('for', $(this).attr('for') + '-' + country);
+    });
+
+    $clonedTemplate.html($templateContent.prop('outerHTML'));
+
+    $('#quoteForm #v-pills-tabContent').append($clonedTemplate.html());
+    
+  }
+
+  function cloneClientSelectOS(country) {
+    
+    var clonedTemplate  = $("#clientSelectOS").children().not('.bs-title-option').clone();
+
+    $('#clientSelect-'+ country).append(clonedTemplate);
+
+    $('#clientSelect-'+ country).selectpicker('val','');
+
+    // 셀렉트 피커 새로고침 | Refresh the select picker
+    $('#quoteForm [id^=clientSelect]').selectpicker('refresh');
+
+  }
+
+  function cloneCountrySelect(el) {
+    const country = el.split('-').length > 2 ? el.split('-')[0].toLowerCase() + "-" + el.split('-')[1].toLowerCase() : el.split('-')[0].toLowerCase();
+    const country_name = el.split('-').length > 2 ? el.split('-')[2] : el.split('-')[1];
+    var countries_list_btn = `<div class="select-country-card position-relative">
+      <button class="nav-link select-country-btn" id="v-pills-${country}-tab" data-bs-keyboard="false" data-bs-toggle="pill" data-bs-target="#v-pills-${country}" type="button" role="tab" aria-controls="v-pills-${country.split('-')[0].toLowerCase()}" aria-selected="false" tabindex="-1">
+        <img class="select-country-flag" src="https://hatscripts.github.io/circle-flags/flags/${country.split('-')[0]}.svg" width="30px" height:"30px"/>
+        
+        <div class="input-group select-country-text-container position-relative">
+          
+        </div>
+        <span class="select-country-table"><table>
+          <thead>
+            <tr><th width="18%"><div>CPI</div></th>
+            <th width="14%"><div>MU</div></th>
+            <th class="d-none"><div>Cost</div></th>
+            <th width="26%"><div>Sales</div></th>
+            <th width="18%"><div>GM (%)</div></th>
+            <th width="24%"><div>GM</div></th></tr>
+          </thead>
+          <tbody>
+            <tr><td></td><td></td><td class="d-none"></td><td></td><td></td><td></td></tr>
+          </tbody>
+        </table></span>
+      </button>
+      <button class="btn btn-sm select-country-menu-btn" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-three-dots-vertical"></i></button>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li><button class="dropdown-item rename-country" type="button">
+          <i class="bi bi-pencil" style="font-size: 12px;"></i>&nbsp;&nbsp;Rename
+        </button></li>
+        <li><button class="dropdown-item duplicate-country" type="button">
+          <i class="bi bi-copy" style="font-size: 12px;"></i>&nbsp;&nbsp;Duplicate
+        </button></li>
+        <li><button class="dropdown-item remove-country" type="button">
+          <i class="bi bi-trash" style="font-size: 12px;"></i>&nbsp;&nbsp;Delete
+        </button></li>
+      </ul>
+      <input type="text" class="form-control form-control-sm position-absolute select-country-text input-readonly" value="${country_name + " " + (country.split('-')[1] === undefined ? "" : country.split('-')[1])}" readonly>
+      <button class="btn btn-sm d-none cancel-rename position-absolute" type="button"><i class="bi bi-x-circle"></i></button>
+      <button class="btn btn-sm d-none save-rename position-absolute" type="button"><i class="bi bi-check-circle"></i></button>
+    </div>`; 
+
+    $('.card-countries-list .nav-pills').append(countries_list_btn);
+  }
+
+  function changeCountryTitle($this) {
+    $('.select-country-btn').attr('tabindex','-1');
+
+    $('.page-title-country').removeClass('show');
+    setTimeout(() => {
+      $('.page-title-country').addClass('show');
+    }, 150);
+    // $('.page-title-country').css('opacity','0');.fadeOut().fadeIn();
+    $('.page-title-country-flag').attr('src',$this.find('.select-country-flag').attr('src'));
+    $('.page-title-country-text').text($this.closest('.select-country-card').find('.select-country-text').val());
+  }
+
+  function initializeMarkupSelect2(selector) {
+    
+    
+    $(selector).each(function(){
+      $(this).select2({
+        theme: "bootstrap-5",
+        tags: true,
+        createTag: function(params) {
+          if (params.term.match(/^\d{1}(\.\d{1,2})?$/)) {
+            // Return null to disable tag creation
+            return {
+              id: parseFloat(params.term),
+              text: parseFloat(params.term),
+              tag: true
+            }
+          }
+          return null;
+        }
+      });
+
+      $(this).data('select2').$dropdown.addClass('markup-select-container');
+    });
+  }
+
+  function AppendTotalVendorResult(country_code) {
+    var markup_val = parseFloat($('#markUpSelect-' + country_code).val());
+    var total_feasibility_val = parseInt($('#totalVendorFeasibility-' + country_code).val().replace(/,/g , ''), 10);
+    var total_cost_val = parseInt($('#totalVendorCosts-' + country_code).val().replace(/,/g , ''), 10);
+    var avg_cpi_val = total_cost_val / total_feasibility_val;
+    var pro_cpi_val = avg_cpi_val * markup_val;    
+    var total_sales_val = pro_cpi_val * total_feasibility_val;
+    var gm_val = total_sales_val - total_cost_val;
+    var gm_per_val = gm_val / total_sales_val;
+
+    // 계산 결과 배열에 현재 상태 저장 | Save the current state to the calculation result array
+    // calcResultArray.push({country_code : $('#vendorForm-' + country_code).find('input,select').serializeArray()});
+    var country_code_name = country_code.split('-')[0];
+    var country_code_num = country_code.split('-')[1] || 0;
+
+    if(calcTotalObj[country_code_name][country_code_num] === undefined) {
+      var obj = {};
+      obj[country_code_num] = [];
+      Object.assign(calcTotalObj[country_code_name], obj);
+    }
+    
+    calcTotalObj[country_code_name][country_code_num].push($('#vendorForm-' + country_code).find('input,select').serializeArray());
+
+    var tr_length = $('#calcResultTable-' + country_code).find('tbody tr').length + 1;
+
+    // 계산 결과를 테이블에 추가 | Append the calculation result to the table
+    $('#calcResultTable-' + country_code).find('tbody').append(`
+      <tr>
+        <th scope="row">${ tr_length }</th>
+        <td>${ AddComma(Math.round(avg_cpi_val)) }</td>
+        <td>${ markup_val }</td>
+        <td>${ AddComma(Math.round(pro_cpi_val)) }</td>
+        <td>${ AddComma(total_feasibility_val) }</td>
+        <td>${ AddComma(total_cost_val) }</td>
+        <td>${ AddComma(Math.round(total_sales_val)) }</td>
+        <td>${ (gm_per_val * 100).toFixed(2) }</td>
+        <td>${ AddComma(Math.round(gm_val)) }</td>
+      </tr>`);
+
+    $('#calcResultTable-' + country_code).find('tbody tr:last').trigger('click');
+  }
+
+  function UpdateActiveVendorResult(country_code) {
+
+    var $activeTd = $('#calcResultTable-' + country_code).find('tr.table-active td');
+
+    var total_feasibility_val = parseInt($('#totalVendorFeasibility-' + country_code).val().replace(/,/g , ''), 10);
+    var total_cost_val = parseInt($('#totalVendorCosts-' + country_code).val().replace(/,/g , ''), 10);
+    var avg_cpi_val = total_cost_val / total_feasibility_val;
+    var pro_cpi_val = parseInt($('#proposalCPI-' + country_code).val().replace(/,/g , ''), 10) || 0;
+    var markup_val = parseFloat((pro_cpi_val / avg_cpi_val).toFixed(2));   
+    var total_sales_val = pro_cpi_val * total_feasibility_val;
+    var gm_val = total_sales_val - total_cost_val;
+    var gm_per_val = gm_val / total_sales_val;
+
+
+    // 계산 결과를 테이블에 추가 | Append the calculation result to the table
+    $activeTd.eq(1).text(markup_val);
+    $activeTd.eq(2).text(AddComma(pro_cpi_val));
+    $activeTd.eq(5).text(AddComma(Math.round(total_sales_val)));
+    $activeTd.eq(6).text((gm_per_val * 100).toFixed(2));
+    $activeTd.eq(7).text(AddComma(Math.round(gm_val)));
+
+    $('#markUp-' + country_code).val(markup_val);
+    $('#expectedSales-' + country_code).val(AddComma(total_sales_val)); // .trigger('input')
+    $('#totalGMPer-' + country_code).val((gm_per_val * 100).toFixed(2));
+    $('#totalGM-' + country_code).val(AddComma(gm_val)); // .trigger('input')
+
+    //$('#calcResultTable-' + country_code).find('tbody tr:last').trigger('click');
+  }
+
+  function CalculateFinalAmount() {
+    var cost_sum = 0;
+    var sales_sum = 0;
+    var gm_per_sum = 0;
+    var gm_sum = 0;
+    var prog_sum = parseInt($('#finalProgramming').val().replace(/,/g , ''), 10) || 0;
+    var overlay_sum = parseInt($('#finalOverlay').val().replace(/,/g , ''), 10) || 0;
+    var other_sum = parseInt($('#finalOther').val().replace(/,/g , ''), 10) || 0;
+
+    $('.select-country-table').each(function(){
+      var cur_cost_val = parseInt($(this).find('tbody td').eq(2).text().replace(/,/g , ''), 10) || 0;
+      var cur_sales_val = parseInt($(this).find('tbody td').eq(3).text().replace(/,/g , ''), 10) || 0;
+      
+      cost_sum = cost_sum + cur_cost_val;
+      sales_sum = sales_sum + cur_sales_val;
+    });
+
+    sales_sum = sales_sum + prog_sum + overlay_sum + other_sum;
+
+    gm_sum = sales_sum - cost_sum;
+
+    gm_per_sum = gm_sum / sales_sum;
+    //console.log(gm_per_sum);
+    if(sales_sum > 0 && gm_per_sum > 0 && gm_sum > 0) {
+      $('#finalSales').val(sales_sum).trigger('input');
+      $('#finalGMPer').val((gm_per_sum * 100).toFixed(2)).trigger('input');
+      $('#finalGM').val(gm_sum).trigger('input');
+    } else {
+      $('#finalSales').val('').trigger('input');
+      $('#finalGMPer').val('').trigger('input');
+      $('#finalGM').val('').trigger('input');
+    }
+  }
+
+  function CalculateSubtotalAmount() {
+    var overlay_sum = 0;
+    var other_sum = 0;
+
+    $('.country-input-form').each(function(){
+      var cur_overlay_val = parseInt($(this).find('input[id^=overlayCost-]').val().replace(/,/g , ''), 10) || 0;
+      var cur_other_val = parseInt($(this).find('input[id^=operationCost-]').val().replace(/,/g , ''), 10) || 0;
+      
+      overlay_sum = overlay_sum + cur_overlay_val;
+      other_sum = other_sum + cur_other_val;
+    });
+
+    // $('#finalOverlay').closest('.input-group').find('.hide-input').text(overlay_sum);
+    // $('#finalOther').closest('.input-group').find('.hide-input').text(other_sum);
+
+    $('#finalOverlay').val(overlay_sum).trigger('input');
+    $('#finalOther').val(other_sum).trigger('input');
+
+  }
+
+  function escapeRegex(string) {
+      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+
+  $(function(){
+    $('#refreshCountryList').find('.spinner').addClass('spinner-busy');
+    $('#refreshCountryList').find('.spinner+span').hide();
+
+     // 스크롤 이벤트 감지하여 네비게이션 바 맨 위에 고정되도록 | Detect scroll event and fix navigation bar at the top 
+    $('#fixedInputOSModal .modal-body').scroll(function() {
+        // 스크롤 위치가 10보다 큰 경우 | If the scroll position is greater than 10
+        if ($('#fixedInputOSModal .modal-body').scrollTop() > 10) {
+            // 네비게이션 바에 sticky 효과 클래스 추가 | Add a sticky effect class to the navigation bar
+            $('#fixedInputOSModal .modal-header').addClass('floating-nav');
+        } else {
+            // 스크롤 위치가 10 이하인 경우 sticky 효과 클래스 제거 | If the scroll position is 10 or less, remove the sticky effect class
+            $('#fixedInputOSModal .modal-header').removeClass('floating-nav');
+        }
+
+    });
+
+    $('#countrySelectOS').on('change', function(){
+      const selection_cnt = $(this).val().length;
+      if(selection_cnt > 0){
+        $('.country-selection-count').text(selection_cnt + ' selected');
+
+        if (selection_cnt > 5) {
+          $('#operationCostOS').val('100,000');
+        } else {
+          $('#operationCostOS').val('150,000');
+        }
+
+      } else {
+        $('.country-selection-count').text('');
+      }
+      
+    });
+
+    $('#countrySelectOS').on('select2:clear', function(){
+      $('#operationCostOS').val('150,000');
+    });
+    
+    $("#countrySelectOS").on("select2:select", function (evt) {
+      var element = evt.params.data.element;
+      var $element = $(element);
+
+      $element.detach();
+      $(this).append($element);
+
+      // Clear the Select2 search input field
+      if($('.select2-search__field').val().length > 0) {
+        $('.select2-search__field').val('');
+        $('#countrySelectOS').select2('close');
+        $('#countrySelectOS').select2('open');
+      }
+
+    });
+
+    // Event handler for when select2 is opened
+    $("#countrySelectOS").on("select2:open", async function(evt) {
+        await waitLoad('.select2-container--open .select2-dropdown--below');
+
+        var $listContainer = $("#select2-countrySelectOS-results");
+        ///sortCountryList($listContainer);
+
+        // Check if there are search results (li elements)
+        if ($listContainer.find('li').length == 1  && $listContainer.find('li').text() == 'No results found') {
+            return false;
+        }
+
+        sortCountryList($listContainer);
+    });
+
+    $('#refreshCountryList').on('click', function(){
+      $(this).find('.spinner').addClass('spinner-busy');
+      $(this).find('.spinner+span').hide();
+
+      runWithRetry('getCountry', showCountryOS, GetFailAlert);
+    });
+
+    // Event handler for input in the select2 search field
+    $(document).on("input", "#fixedInputOSModal textarea.select2-search__field", function(e) {
+
+        if($(this).val().length == 0) {
+          $('#countrySelectOS').select2('close');
+          $('#countrySelectOS').select2('open');
+        }
+
+        var pastedData = $(this).val();
+        //console.log(pastedData);
+
+        // Check if the input is the result of a paste operation
+        if (e.originalEvent && e.originalEvent.inputType === 'insertFromPaste') {
+            // Split the pasted text using comma, space, or newline as delimiters
+            var items = pastedData.split(/[\n,\t,]+/).map(item => item.trim().toLowerCase()).filter(item => item);
+
+            // Create an array to store values in the order they are input
+            var valuesToSelect = [];
+
+            items.forEach(pastedItem => {
+                countryListOptions.forEach(option => {
+                  //console.log(option.keyword);
+                    // Split the keywords string into an array
+                    var keywordsArray = option.keyword.toLowerCase().split(" | ");
+
+                    // Check if the pasted item matches any of the keywords
+                    if (keywordsArray.includes(pastedItem)) {
+                        valuesToSelect.push(option.id);
+                    }
+                });
+            });
+
+            // First, clear the current selection to avoid conflicts
+            $('#countrySelectOS').val(null).trigger('change');
+
+            // Manually select and reorder options based on input order
+            valuesToSelect.forEach(value => {
+                var $option = $('#countrySelectOS').find('option[value="' + value + '"]');
+                $option.detach().appendTo('#countrySelectOS'); // Reorder the option
+            });
+
+            // Select the matching options
+            $('#countrySelectOS').val(valuesToSelect).trigger('change');
+
+            // Clear the search field after a short delay
+            setTimeout(() => {
+                $(this).val('');
+                $('#countrySelectOS').select2('close');
+            }, 0);
+        }
+
+    });
+
+    $(document).on('mouseleave', '.select2-container--bootstrap-5 .select2-dropdown .select2-results__options .select2-results__option', function(){
+      $(this).removeClass('select2-results__option--highlighted');
+      $(this).not('.select2-results__option--selected').attr('aria-selected','false');
+    });
+
+    // 고정항목 로드하기 | Load fixed inputs
+    $('#loadFixedInputOS').on('click', function(e){
+        e.preventDefault();
+
+        // 폼이 유효하지 않은지 확인하기 위한 변수 초기화 | Initialize variable to check if the form is not valid
+        var formInvalid = false;
+
+        // 필수 속성이 설정된 가시(input, select, textarea) 엘리먼트를 필터링하고 각각에 대해 확인 | Filter visible (input, select, textarea) elements with required attribute and check each one
+        $('#fixedInputForm input, #fixedInputForm select, #fixedInputForm textarea').filter('[required]:visible').each(function() {
+          // 값이 비어있는 경우 폼이 유효하지 않음을 표시하는 변수를 true로 설정 | Set the variable indicating the form is not valid to true if the value is empty
+          if ($(this).val().length == 0) {
+            formInvalid = true;
+          }
+        });
+
+        //if (!formInvalid) {
+          
+        //}
+
+        
+        // 폼이 유효하지 않은 경우 | If the form is not valid
+        if (formInvalid) {
+          // 현재 언어에 따라 메시지 설정 | Set the message based on the current language
+          if (lang == "ko" || lang == "") {
+            $('#alertMessage').text('필수항목을 모두 입력해주세요.');
+          }
+          if (lang == "en") {
+            $('#alertMessage').text('Please fill out all required fields.');
+          }
+
+          // 경고 모달 표시 | Show the warning modal
+          $modal = $('#warningAlert');
+          $modal.modal('show');
+        } else {
+          if($('#samplingTypeSelectOS').val() === '') $('#samplingTypeSelectOS').val('Random');
+
+          $('#loadFixedInputOS').prop('disabled', true);
+          $('#loadFixedInputOS').addClass('btn-disabled');
+          $('#loadFixedInputOS .spinner').addClass('spinner-busy');
+          
+          setTimeout(function() {
+            //selected_countries = $("#countrySelectOS").val().map((val) => val.split('-')[0].toLowerCase());
+            selected_countries = $("#countrySelectOS").val();
+            selected_countries.forEach(function(el){
+              const country_code = el.split('-')[0].toLowerCase();
+              const country_name = el.split('-')[1];
+              cloneInputFormTemplate(country_code);
+              cloneClientSelectOS(country_code);
+
+              //$('#countryName-' + country_code).val(country_name);
+            });
+            
+            //runActions();
+            //runInit();
+            $('.selectpicker').selectpicker('refresh');
+            //$('[id^=dateSelect]').data('daterangepicker').updateView();
+            switchRFQModeToggle();
+            initLang();
+            loadInputOS = true;
+            $('#fixedInputOSModal').modal('hide');
+            $('.main-body,.navbar-btn-container,.page-title-country,footer.footer').show();
+            $('.page-title-country').addClass('show');
+            
+            $('[id^=openVendorModal]').find('.spinner').addClass('spinner-busy');
+            $('[id^=openVendorModal]').find('.spinner+span').hide();
+            $('[id^=openVendorModal]').addClass('disabled');
+
+            runWithRetry('getVendors', showVendors, GetFailAlert);
+            
+            
+            $('.selectpicker').selectpicker('refresh');
+            var fixedInputArr = $('#fixedInputForm').serializeArray();
+            var rfq_date;
+            fixedInputArr.forEach(function (pair) {
+              //console.log(pair.name);
+              //console.log(pair.value);
+              var selector = `input[name|="${ pair.name.replace('-OS','') }"], select[name|="${ pair.name.replace('-OS','') }"]`;
+              var input = $('#quoteForm').find(selector);
+              input.val(pair.value);
+              if(input.hasClass('selectpicker')) { input.selectpicker('refresh'); }
+
+              if(pair.name == "Countries[]"){//<span class="select-country-text">${pair.value.split('-')[1]}</span>
+                cloneCountrySelect(pair.value);
+              }
+
+              if(pair.name == "RFQ Date-OS"){//<span class="select-country-text">${pair.value.split('-')[1]}</span>
+                rfq_date = pair.value;
+              }
+
+            });
+
+            $('.select-country-btn').eq(0).addClass('active');
+            $('.select-country-btn').eq(0).attr('aria-selected','true');
+            $('.country-input-form').eq(0).addClass('show active');
+            $('.page-title-country-flag').attr('src',$('.select-country-btn').eq(0).find('.select-country-flag').attr('src'));
+            $('.page-title-country-text').text($('.select-country-btn').eq(0).closest('.select-country-card').find('.select-country-text').val());
+
+            initializeMarkupSelect2('[id^=markUpSelect]');
+            
+            $('.selectpicker').selectpicker('refresh');
+            RefreshDatePicker('#quoteForm [id^=dateSelect]',rfq_date);
+            
+            CalculateSubtotalAmount();
+
+            $('[id^=totalTargetSample-]').each(function(){
+                const country_code = $(this).attr('id').split(/-(.*)/s)[1];
+                const sample_num = $('#sampleNum-' + country_code).val();
+                if(sample_num !== '') {
+                    $(this).val(sample_num);
+                }
+            });
+
+          }, 100);
+
+        }
+        
+        
+    });
+
+    //change page title country and flag
+    $(document).on('click', '.select-country-btn', function(e){ 
+      changeCountryTitle($(this));
+    });
+
+    //change page title country and flag
+    $(document).on('keyup', '.select-country-btn', function(e){ 
+      if($(this).data('clicked') || ['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(e.key)){
+        changeCountryTitle($(this));
+      }
+    });
+
+    //remove country if delete button is clicked
+    $(document).on('click', 'button.remove-country', function(e){
+      e.preventDefault();
+
+      var $tab = $(this).closest('.select-country-card');
+      var $pill = $($tab.find('.select-country-btn').attr('data-bs-target'));
+      var country_name = $tab.find('input.select-country-text').val().trim();
+      var country_code = $tab.find('.select-country-btn').attr('data-bs-target').split('#v-pills-')[1];
+      var country_code_name = country_code.split('-')[0];
+      var country_code_num = country_code.split('-')[1] || 0;
+
+      if(lang == "ko" || lang == "") {
+        $('#confirmMessage').text(country_name + '을/를 삭제 하시겠습니까?');
+      }
+      if(lang == "en") {
+        $('#confirmMessage').text('Are you sure you want to delete ' + country_name + '?');
+      }
+
+      $modal = $('#confirmAlert');
+      $modal.find('button.modal-alert-btn-confrim').text('Delete');
+      $modal.find('button.modal-alert-btn-confrim').addClass('btn-red');
+
+      $modal.modal('show');
+
+      $modal.find('button.modal-alert-btn-confrim').off('click').on('click', function(){
+        
+        if($('.select-country-card').length > 1){
+          if($tab.find('.select-country-btn').hasClass('active')){
+            if($tab.next().length == 0) {
+              $('.select-country-card').eq(0).find('.select-country-btn').click();
+            } else {
+              $tab.next().find('.select-country-btn').click();
+            }
+          }
+          $(this).removeClass('btn-red');
+          $tab.remove();
+          $pill.remove();
+
+          delete calcTotalObj[country_code_name][country_code_num];
+
+          CalculateSubtotalAmount();
+          CalculateFinalAmount();
+        } else {
+          if(lang == "ko" || lang == "") {
+            $('#alertMessage').text('마지막 국가를 삭제할 수 없습니다.');
+          }
+          if(lang == "en") {
+            $('#alertMessage').text('You cannot delete the last country.');
+          }
+          $modal = $('#warningAlert');
+          $modal.modal('show');
+        }
+          
+      });
+
+    });
+
+    //duplicate country if duplicate button is clicked
+    $(document).on('click', 'button.duplicate-country', function(e){
+      e.preventDefault();
+
+      var $tab = $(this).closest('.select-country-card');
+      var pillTargetId = $tab.find('.select-country-btn').attr('data-bs-target');
+      var $pill = $(pillTargetId);
+      var clonedTab = $tab.clone(true);
+      var rfq_date = $pill.find('[id^=dateSelect]')
+      $pill.find('[id^=markUpSelect]').nextAll('span.select2 ').remove();
+      $pill.find('[id^=markUpSelect]').select2('destroy');
+      var clonedPill  = $pill.clone();
+      var country_name = $tab.find('input.select-country-text').val().trim();
+      var country_code_full = $tab.find('.select-country-btn').attr('aria-controls').split('v-pills-')[1];
+      var country_code = country_code_full.split('-')[0];
+      var $tabAll = $('.select-country-card').find('[id^="v-pills-'+ country_code +'"]');
+      var $pillAll = $('.country-input-form[id^="v-pills-'+ country_code +'"]');
+      var cnt_arr = $tabAll.map(function(i, e) {
+                        return isNaN($(e).attr("aria-controls").slice(-1)) ? 0 : parseInt($(e).attr("aria-controls").slice(-1), 10);
+                    }).get();
+      var prev_country_num = country_code_full.split('-')[1] || 0;
+      var same_country_cnt = Math.max.apply(this, cnt_arr) + 1;
+
+      if(!$tab.find('.select-country-text').hasClass('input-readonly')) {
+        if(lang == "ko" || lang == "") {
+          $('#alertMessage').text('변경할 이름을 먼저 저장 해주세요.');
+        }
+        if(lang == "en") {
+          $('#alertMessage').text('Please finish renaming first.');
+        }
+        $modal = $('#warningAlert');
+        $modal.modal('show');
+        return false;
+      }
+
+      //duplicate the pill
+      clonedPill.attr({
+        "id": "v-pills-" + country_code + "-" + same_country_cnt,
+        "aria-labelledby": "v-pills-" + country_code + "-" + same_country_cnt + "-tab",
+      });
+
+      clonedPill.find('input, select, a, textarea, div, table, button').each(function(){
+        if($(this).attr("id")) $(this).attr('id', $(this).attr('id').split('-'+country_code)[0] + '-' + country_code + '-' + same_country_cnt);
+        if($(this).attr("name")) $(this).attr('name', $(this).attr('name').split('-'+country_code)[0] + '-' + country_code + '-' + same_country_cnt);
+      });
+
+      clonedPill.find('label').each(function(){
+        $(this).attr('for', $(this).attr('for').split('-'+country_code)[0] + '-' + country_code + '-' + same_country_cnt);
+      });
+      
+      clonedPill.find('.selectpicker').each(function(){
+        $(this).insertBefore($(this).closest('.bootstrap-select'));
+        $(this).find('.bs-title-option').remove();
+      });
+
+      clonedPill.find('.bootstrap-select').remove();
+
+      clonedPill.find('.selectpicker').selectpicker();
+      $pill.find('.selectpicker').each(function(i){
+        var temp_val = $(this).val();
+        //console.log(temp_val);
+        clonedPill.find('.selectpicker').eq(i).selectpicker('val',temp_val);
+        
+      });
+
+      clonedPill.removeClass('active show');
+
+      //$pill.after(clonedPill);
+
+      $pillAll.last().after(clonedPill);
+
+      if(calcTotalObj[country_code][same_country_cnt] !== undefined) {
+        calcTotalObj[country_code][same_country_cnt] = [];
+      } else {
+        var obj = {};
+        obj[same_country_cnt] = [];
+        Object.assign(calcTotalObj[country_code], obj);
+      }
+
+      if(calcTotalObj[country_code][prev_country_num] !== undefined) {
+        //var clonedObjArr = [...calcTotalObj[country_code][prev_country_num]];
+        var clonedObjArr = JSON.parse(JSON.stringify(calcTotalObj[country_code][prev_country_num])); // deep copy
+        // Iterate through each array in the data
+        clonedObjArr.forEach(array => {
+            // Iterate through each object in the array
+            array.forEach(obj => {
+              // Check if the name ends with a number using a regex
+              if(prev_country_num > 0 && /\d$/.test(obj.name)) {
+                // Increment the existing number by 1
+                obj.name = obj.name.replace(/(\d+)$/, (match) => parseInt(match) + 1);
+              } else {
+                // Attach '-1' to the name if it doesn't end with a number
+                obj.name += "-1";
+              }
+            });
+            calcTotalObj[country_code][same_country_cnt].push(array);
+        });
+        //calcTotalObj[country_code][same_country_cnt] = clonedObjArr;
+      }
+
+      //duplicate the tab
+      clonedTab.find('.select-country-btn').attr({
+          "id": "v-pills-" + country_code + "-" + same_country_cnt + "-tab",
+          "data-bs-target": "#v-pills-" + country_code + "-" + same_country_cnt,
+          "aria-controls": "v-pills-" + country_code + "-" + same_country_cnt
+      });
+
+      clonedTab.find('.select-country-btn').removeClass('active');
+      clonedTab.find('.select-country-menu-btn, .dropdown-menu').removeClass('show');
+
+      clonedTab.find('input.select-country-text').val(isNaN(country_name.trim().slice(-1)) ? country_name + ' ' + same_country_cnt : country_name.slice(0,-1) + same_country_cnt);
+
+      //$tab.after(clonedTab);
+
+      $tabAll.last().closest('.select-country-card').after(clonedTab);
+      
+      $("#v-pills-" + country_code + "-" + same_country_cnt + "-tab").click();
+
+      initializeMarkupSelect2('[id^=markUpSelect-' + country_code + ']');
+
+      CalculateSubtotalAmount();
+      CalculateFinalAmount();
+
+      
+      //runInit();
+      $('.selectpicker').selectpicker('refresh');
+      RefreshDatePicker('#dateSelect-' + country_code + '-' + same_country_cnt,rfq_date);
+    });
+
+    $(document).on('click', 'button.rename-country, button.edit-input', function(e) {
+        e.preventDefault();
+
+        // Determine if we're in the "rename-country" or "edit-input" context
+        var isCountryEdit = $(this).hasClass('rename-country');
+        var $parent = isCountryEdit ? $(this).closest('.select-country-card') : $(this).closest('.total-card');
+        var $input = $parent.find('input');
+        var $label = $parent.find('label');
+        var prevName = $input.val().trim();
+        var country_code = isCountryEdit ? $parent.find('.select-country-btn').attr('data-bs-target').split('#v-pills-')[1] : $input.attr('id').split(/-(.*)/s)[1];
+
+        // Generic toggle function for enabling/disabling edit mode
+        function toggleEditing(isEditing) {
+            $input.toggleClass('input-readonly', !isEditing);
+            $input.prop('readonly', !isEditing);
+            
+            if (isCountryEdit) {
+                $parent.find('button.save-rename, button.cancel-rename').toggleClass('d-none', !isEditing);
+            } else {
+                $parent.find('button.save-edit, button.cancel-edit').toggleClass('d-none', !isEditing);
+                $parent.find('button.edit-input').toggleClass('d-none', isEditing);
+            }
+            
+            if (isEditing) {
+                $input.focus();
+                var tmpStr = $input.val();
+                $input.val('');
+                $input.val(tmpStr);
+            }
+        }
+
+        toggleEditing(true);
+
+        // Event handler for cancel action
+        $parent.find(isCountryEdit ? 'button.cancel-rename' : 'button.cancel-edit').off('click').on('click', function() {
+            if (isCountryEdit) {
+              $input.val(prevName).trigger('input'); //
+              toggleEditing(false);
+            } else {
+              $input.val(prevName);
+              UpdateActiveVendorResult(country_code);
+              toggleEditing(false);
+            }
+        });
+
+        $input.not(':has(.input-readonly)').on('keyup', function(e) {
+          if(e.key === 'Enter') {
+            $parent.find(isCountryEdit ? 'button.save-rename' : 'button.save-edit').trigger('click');
+          }
+        });
+
+        // Event handler for save action
+        $parent.find(isCountryEdit ? 'button.save-rename' : 'button.save-edit').off('click').on('click', function() {
+            var curName = $input.val().trim();
+            
+            if (isCountryEdit) {
+                var val_arr = [];
+                $('input.select-country-text').not($input).each(function() {
+                    val_arr.push($(this).val());
+                });
+
+                if (val_arr.some(item => item.includes(curName))) {
+                    if (lang == "ko" || lang == "") {
+                        $('#alertMessage').text('중복된 이름이 존재합니다. 다시 입력해주세요.');
+                    }
+                    if (lang == "en") {
+                        $('#alertMessage').text('Duplicate name already exists.');
+                    }
+                    $('#warningAlert').modal('show');
+                    $input.focus();
+                } else {
+                    $input.val(curName);
+                    toggleEditing(false);
+                    $parent.find('.select-country-btn').click();
+                }
+            } else {
+                $input.val(curName);
+                toggleEditing(false);
+                $('#calcResultTable-' + country_code).find('tbody tr.table-active').trigger('click');
+            }
+        });
+
+        // Click outside to cancel rename/edit in select-country-card case
+        if (isCountryEdit) {
+          $('.select-country-card').not($parent).off('click').on('click', function() {
+              if ($input.prop('readonly') == false) {
+                  $input.val(prevName);
+                  toggleEditing(false);
+              }
+          });
+        } else {
+          // $input.on('blur',function(){
+          //   if ($input.prop('readonly') == false) {
+          //       //$input.val(prevName).trigger('input');
+          //       toggleEditing(false);
+          //   }
+          // });
+          
+          $('#calcResultTable-'+ country_code +' tbody tr,input,select,button').not($label.find('button')).not($input).on('click', function(e) {
+              if ($input.prop('readonly') == false) {
+                $input.val(prevName);
+                UpdateActiveVendorResult(country_code);
+                toggleEditing(false);
+              }
+          });
+          $input.on('input', function(e){
+            UpdateActiveVendorResult(country_code);
+          });
+          
+        }
+        // else {
+        //   var country_code = $input.attr('id').split(/-(.*)/s)[1];
+        //   $input.on('input',function(){
+
+        //     UpdateActiveVendorResult(country_code);
+        //   });
+        // }
+    });
+
+    // $(document).on('input', '[id^=proposalCPI-]', function(e){
+    //   var country_code = $(this).attr('id').split(/-(.*)/s)[1];
+    //   UpdateActiveVendorResult(country_code);
+    // });
+    
+    // $(document).on('keydown', '.select-country-btn', function(e){
+    //   e.preventDefault();
+    //   e.stopImmediatePropagation();
+    //   $('.select-country-btn').attr('tabindex','-1');
+    //   // if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+    //   //     console.log(true);
+    //   //     e.preventDefault(); // Prevent default behavior
+    //   //     e.stopImmediatePropagation();
+    //   // }
+    // });
+
+    $(document).on('focus', '.select-country-btn', function(e){
+      $('.select-country-btn').attr('tabindex','-1');
+
+      //console.log('focused');
+
+      // Disable Bootstrap's keyboard navigation for tabs
+      var tabs = document.querySelectorAll('.select-country-btn');
+      
+      tabs.forEach(function(tab) {
+          // Add event listener to each tab to prevent default key actions
+          tab.addEventListener('keydown', function(e) {
+              if (['ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                  e.preventDefault();  // Prevent default behavior
+                  e.stopImmediatePropagation();  // Stop event propagation to Bootstrap's handler
+              }
+          });
+      });
+
+      // Ensure Bootstrap doesn't reattach its own handlers
+      var bootstrapTabHandler = function(e) {
+          if (['ArrowLeft', 'ArrowRight'].includes(e.key)) {
+              e.preventDefault();  // Prevent default behavior
+              e.stopImmediatePropagation();  // Stop event propagation
+          }
+      };
+
+      // Reattach the listener after Bootstrap potentially re-initializes
+      tabs.forEach(function(tab) {
+          tab.addEventListener('shown.bs.tab', function() {
+              tab.removeEventListener('keydown', bootstrapTabHandler);
+              tab.addEventListener('keydown', bootstrapTabHandler);
+          });
+      });
+    });
+
+
+
+    // 'vendorUseBoxCnt'의 변경 이벤트에 대한 핸들러 등록 | Register a handler for the change event of 'vendorUseBoxCnt'
+    $(document).on('change', '[id^=vendorUseBoxCnt]', function () {
+        // 선택된 값에 따라 조건 분기 | Conditional branching based on the selected value
+        var selectedValue = $(this).find(':selected').val();
+
+        // 각 자식 요소에 대해 반복 | Loop through each child element
+        $(this).closest('.card-body').find('[id^=vendorUseBox] fieldset:not(:first)').each(function (index) {
+            if(index + 1 < selectedValue) {
+              $(this).removeClass("d-none");
+            } else {
+              $(this).addClass("d-none");
+            }
+        });
+    });
+
+    $(document).on('click', '[id^=openVendorModal]', function(e) {
+      e.preventDefault();
+
+      
+
+      var country_code = $(this).attr('id').split(/-(.*)/s)[1];
+      var country_code_name = country_code.includes('-') ? country_code.split('-')[0] : country_code;
+      var loi_val = $('input#loiInput-' + country_code).val();
+      var type_val = $('#samplingTypeSelect-' + country_code).val();
+      var project_name = $('input#projectName-' + country_code).val();
+      var country_col = vendorTableColumns.findIndex(x => x.title === "Country");
+      var type_col = vendorTableColumns.findIndex(x => x.title === "Type");
+      var vendor_col = vendorTableColumns.findIndex(x => x.title === "Vendor");
+      var mail_col = vendorTableColumns.findIndex(x => x.title === "RFQ 메일제목");
+      var loi_col = vendorTableColumns.findIndex(x => x.title === "LOI");
+      var cpi_col = vendorTableColumns.findIndex(x => x.title === "CPI");
+      var cpi_krw_col = vendorTableColumns.findIndex(x => x.title === "원화 CPI");
+      var feasibility_col = vendorTableColumns.findIndex(x => x.title === "Feasibility");
+      var ir_from_col = vendorTableColumns.findIndex(x => x.title === "IR_from");
+      var ir_to_col = vendorTableColumns.findIndex(x => x.title === "IR_to");
+      var currency_col = vendorTableColumns.findIndex(x => x.title === "Currency");
+      var exchange_rate_col = vendorTableColumns.findIndex(x => x.title === "Exchange rate");
+      var flag = false;
+
+      vendorTableData.forEach(function(arr){
+        if(arr[country_col] === country_code_name.toUpperCase() && arr[mail_col] === project_name && arr[loi_col] === loi_val) {
+          flag = true;
+          return false;
+        }
+      });
+
+      vendorDataTable = $('#vendorsTable').DataTable({
+          language: { search: '', searchPlaceholder: "Search all" },
+          destroy: true,
+          paging: true,
+          pageLength: 25,
+          scrollX: true,
+          scrollResize: true,
+          scrollCollapse: true,
+          scrollY: 100,
+          autoWidth: false,
+          data: vendorTableData,
+          columns: vendorTableColumns,
+          select: {
+              style: 'multi'
+          },
+          order: [
+            [cpi_krw_col, 'asc'],
+            [feasibility_col, 'desc']
+          ],
+          layout: {
+              bottomEnd: {
+                  paging: {
+                      firstLast: false
+                  }
+              }
+          }
+        });
+
+      vendorDataTable.on( 'select', function ( e, dt, type, ix ) {
+        var selected = dt.rows({selected: true});
+        if ( selected.count() > 5 ) {
+            dt.rows(ix).deselect();
+        }
+      });
+
+      vendorDataTable.on( 'draw', function () {
+          vendorDataTable.columns.adjust();
+
+      });
+
+      $('.dt-search').prepend(`
+                    <div class="go-to-btn-container d-none" style="display:inline-block;"><a class="btn btn-outline-secondary btn-sm go-to-btn"
+                      href="https://docs.google.com/spreadsheets/d/1pWFTXnpKhO6VOzHT7KsjrUPxmKFwfQdlatTKmWvTjUk/edit?gid=1004620658#gid=1004620658"
+                      target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="Open Vendor List" role="button"><i
+                        class="bi bi-box-arrow-up-right"></i></a></div>
+                    <div class="dropdown filter-dropdown d-none" style="display: inline-block;">
+                      <button type="button" id="showFilterDropdown" class="btn btn-outline-secondary btn-sm" data-bs-toggle="dropdown"
+                        aria-expanded="false" data-bs-auto-close="outside">
+                        <i class="bi bi-filter" style="display: flex;align-items: center;"></i> Filters
+                        <span class="filter-cnt-total">0</span>
+                      </button>
+                      <div class="dropdown-menu p-2 filter-dropdown-menu">
+                        <div>
+                          <div class="filter-header">
+                            <label for="filterSelect">Filters</label>
+                            <button id="clearFilter" class="btn btn-light btn-sm" style="background-color:white;position:relative;">
+                              <i class="fa fa-refresh" style="font-size:11px;" aria-hidden="true"></i>
+                            </button>
+                          </div>
+                          <div class="accordion accordion-flush" id="filterAccordion">
+                            <div class="accordion-item">
+                              <h2 class="accordion-header" id="headingCountry">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                  data-bs-target="#collapseCountry" aria-expanded="true" aria-controls="collapseCountry">
+                                  Country <span class="filter-cnt-subtotal filter-cnt-country">0</span>
+                                </button>
+                              </h2>
+                              <div id="collapseCountry" class="accordion-collapse collapse" aria-labelledby="headingCountry">
+                                <div class="accordion-body">
+                                  <input type="search" id="countrySearch" class="form-control form-control-sm mb-2"
+                                    placeholder="Search country" />
+                                  <div id="countryFilters" class="form-check filter-list">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="accordion-item">
+                              <h2 class="accordion-header" id="headingType">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                  data-bs-target="#collapseType" aria-expanded="true" aria-controls="collapseType">
+                                  Type <span class="filter-cnt-subtotal filter-cnt-type">0</span>
+                                </button>
+                              </h2>
+                              <div id="collapseType" class="accordion-collapse collapse" aria-labelledby="headingType">
+                                <div class="accordion-body">
+                                  <input type="search" id="typeSearch" class="form-control form-control-sm mb-2"
+                                    placeholder="Search type" />
+                                  <div id="typeFilters" class="form-check filter-list">
+                                    <div class="form-check">
+                                      <input type="checkbox" class="form-check-input type-checkbox" id="type-checkbox-random"
+                                        value="random">
+                                      <label class="form-check-label" for="type-checkbox-random">random</label>
+                                    </div>
+                                    <div class="form-check">
+                                      <input type="checkbox" class="form-check-input type-checkbox" id="type-checkbox-booster"
+                                        value="booster">
+                                      <label class="form-check-label" for="type-checkbox-booster">booster</label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="accordion-item">
+                              <h2 class="accordion-header" id="headingLOI">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                  data-bs-target="#collapseLOI" aria-expanded="true" aria-controls="collapseLOI">
+                                  LOI <span class="filter-cnt-subtotal filter-cnt-loi">0</span>
+                                </button>
+                              </h2>
+                              <div id="collapseLOI" class="accordion-collapse collapse" aria-labelledby="headingLOI">
+                                <div class="accordion-body">
+                                  <input type="search" id="loiSearch" class="form-control form-control-sm mb-2" placeholder="Search loi" />
+                                  <div id="loiFilters" class="form-check filter-list">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="accordion-item">
+                              <h2 class="accordion-header" id="headingIR">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                  data-bs-target="#collapseIR" aria-expanded="true" aria-controls="collapseIR">
+                                  IR <span class="filter-cnt-subtotal filter-cnt-ir">0</span>
+                                </button>
+                              </h2>
+                              <div id="collapseIR" class="accordion-collapse collapse" aria-labelledby="headingIR">
+                                <div class="accordion-body">
+                                  <input type="search" class="input-number form-control form-control-sm mb-2" placeholder="Search IR"
+                                    id="searchIR" maxlength="3">
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>`);
+      $('.filter-dropdown,.go-to-btn-container').toggleClass('d-none');
+      $('.go-to-btn').tooltip({
+          trigger: 'hover'
+      });
+
+      $('#selectVendorsModal').modal('show');
+      // $('.table-loading-spinner-container').toggleClass('d-none');
+      // $('.table-loading-spinner').toggleClass('spinner-busy');
+
+
+      function processColumnData(columnIdx, filterId, checkboxClass) {
+        const uniqueArray = [];
+        vendorDataTable.column(columnIdx).data().unique().each(function (value) {
+          if (filterId == 'statusFilters') { 
+            let elements = $(value);
+            value = $(elements[0]).attr('data-status'); 
+          }
+          if (value !== undefined) uniqueArray.push(value);
+        });
+        uniqueArray.sort().forEach(function (val) {
+          $(`.filter-dropdown-menu #${filterId}`).append(`
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input ${checkboxClass}" id="${checkboxClass}-${val}" value="${val}">
+              <label class="form-check-label" for="${checkboxClass}-${val}">${val}</label>
+            </div>
+          `);
+        });
+      }
+
+      // Process each column
+      processColumnData(country_col, 'countryFilters', 'country-checkbox');
+      processColumnData(loi_col, 'loiFilters', 'loi-checkbox');
+
+      // Define groups and their corresponding column indexes
+      var groups = {
+        country: { selector: '.country-checkbox', column: country_col },
+        loi: { selector: '.loi-checkbox', column: loi_col },
+        type: { selector: '.type-checkbox', column: type_col }
+      };
+
+      $.fn.dataTable.ext.search.push(function (settings, rowData, rowIndex) {
+        var searchTerm = $('input[id^=dt-search-]').val();
+
+        // Step 1: Handle checkbox filters
+        var selectedFilters = {};
+        Object.keys(groups).forEach(function (key) {
+          var group = groups[key];
+          selectedFilters[key] = $(group.selector + ':checked').map(function () {
+            return this.value;
+          }).get();
+        });
+
+        var isFilterApplied = Object.values(selectedFilters).some(function (values) {
+          return values.length > 0;
+        });
+
+        var matchesFilters = Object.keys(selectedFilters).every(function (key) {
+          var group = groups[key];
+          var selectedValues = selectedFilters[key];
+
+          // Skip this filter if no values are selected for this group
+          if (selectedValues.length === 0) return true;
+
+          // Check if the cell value matches any of the selected values
+          var regex = new RegExp(selectedValues.join('|'));
+          var cellValue = key === 'type' && rowData[group.column].toLowerCase().includes('random') ? 'random' : key === 'type' && rowData[group.column].toLowerCase().includes('booster') ? 'booster' : rowData[group.column];
+          return regex.test(cellValue);
+        });
+
+        // Step 2: Handle search functionality
+        var matchesSearch = !searchTerm || new RegExp(searchTerm, 'i').test(rowData);
+
+        // Step 3: Handle IR search filtering
+        var matchesIR = $('#searchIR').val() === "" ? true : (Number(rowData[ir_from_col]) <= Number($('#searchIR').val()) && Number(rowData[ir_to_col]) >= Number($('#searchIR').val()));
+
+        // Row is shown if it matches all criteria: filters, search term, and IR range
+        return (!isFilterApplied || matchesFilters) && matchesSearch && matchesIR;
+      });
+
+      function initTableFilter() {
+        if(flag) {
+          var searchValue = $.trim(project_name); // Get the search sentence and trim whitespace
+          var escapedValue = escapeRegex(searchValue); // Escape special characters
+
+          // Add condition to match the sentence or empty cells
+          var regex = '^(' + escapedValue + '|)$';
+
+          vendorDataTable.column(mail_col).search(regex,true,false);
+
+        }
+        $(`.filter-dropdown-menu #country-checkbox-${ country_code_name.toUpperCase() }`).prop('checked', true).change();
+        $(`.filter-dropdown-menu #loi-checkbox-${ loi_val }`).prop('checked', true).change();
+        $(`.filter-dropdown-menu #type-checkbox-${ type_val.toLowerCase() }`).prop('checked', true).change();
+
+      }
+      
+
+      setTimeout(() => {
+        initTableFilter();
+      }, 0);
+
+      setTimeout(() => {
+        vendorDataTable.columns.adjust();
+      }, 200);
+
+      // const searchInput = document.querySelector("input[id^=dt-search-]");
+      // if (searchInput) {
+      //     searchInput.addEventListener("search", function () {
+      //         vendorDataTable.search('').draw(); // Clear DataTable search when triggered
+      //     });
+      // } else {
+      //     console.error('Element with ID "dt-search-" not found.');
+      // }
+
+      var totalCnt = 0; 
+      var before_ir_filter = true;
+
+      // Event listener for checkboxes
+      $(document).on('change', '.country-checkbox, .loi-checkbox, .type-checkbox', function () {
+        var countrySubCnt = $('.filter-dropdown-menu .form-check-input.country-checkbox:checked').length;
+        var loiSubCnt = $('.filter-dropdown-menu .form-check-input.loi-checkbox:checked').length;
+        var typeSubCnt = $('.filter-dropdown-menu .form-check-input.type-checkbox:checked').length;
+        totalCnt = $('.filter-dropdown-menu .form-check-input:checked').length;
+        //console.log(totalCnt);
+        $('.filter-dropdown .filter-cnt-country').text(countrySubCnt);
+        $('.filter-dropdown .filter-cnt-loi').text(loiSubCnt);
+        $('.filter-dropdown .filter-cnt-type').text(typeSubCnt);
+        $('.filter-dropdown .filter-cnt-total').text($('#searchIR').val().length === 0 ? totalCnt : totalCnt + 1);
+        vendorDataTable.draw(); // Trigger the custom filter
+      });
+
+      // Event listener for ir input
+      $(document).on('input', '#searchIR', function () {
+        if(before_ir_filter) {
+          //totalCnt++;
+          before_ir_filter = false;
+        }
+
+        if($(this).val().length === 0) {
+          //totalCnt--;
+          before_ir_filter = true;
+        } 
+
+        $('.filter-dropdown .filter-cnt-ir').text($(this).val().length === 0 ? '0' : '1');
+        $('.filter-dropdown .filter-cnt-total').text($('#searchIR').val().length === 0 ? totalCnt : totalCnt + 1);
+        vendorDataTable.draw(); // Trigger the custom filter
+      });
+
+      let debounceTimeout;
+      // Search event listener for DataTables' dt-search
+      $('input[id^=dt-search-]').on('input', function (e) {
+        clearTimeout(debounceTimeout); // Clear any pending redraw
+
+        // Set a timeout to redraw the vendorDataTable after 300ms
+        debounceTimeout = setTimeout(function () {
+          vendorDataTable.draw(); // Perform search within the already filtered data
+        }, 300); // Adjust delay time as needed (e.g., 200-500ms)
+
+        if ($(this).val().length === 0){
+          vendorDataTable.search('').draw();
+        }
+      });
+
+      // Reset filters button
+      $('#clearFilter').click(function () {
+        $('.filter-dropdown-menu .form-check-input:checked').prop('checked', false).trigger('change'); // Uncheck all checkboxes
+        $('#searchIR').val('').trigger('input');
+        initTableFilter();
+        vendorDataTable.draw(); // Reset vendorDataTable filter
+      });
+
+      // Search inside the accordion
+      $('#countrySearch,#loiSearch,#typeSearch').on('keyup', function () {
+        var searchValue = $(this).val().toLowerCase();
+        $(this).closest('.accordion-body').find('.form-check').each(function () {
+          var label = $(this).find('label').text().toLowerCase();
+          $(this).toggle(label.indexOf(searchValue) > -1); // Show/hide based on search
+        });
+      });
+
+      $('#loadVendors').off('click').on('click', function(e){
+        e.preventDefault();
+
+        var vendor_data = vendorDataTable.rows({selected:  true}).data();
+        var vendor_data_index_arr = [vendor_col,ir_from_col,ir_to_col,feasibility_col,cpi_col,cpi_krw_col,currency_col,exchange_rate_col];
+
+        //console.log(vendor_data);
+        if (vendor_data.length === 0) {
+          // 언어에 따라 메시지 설정 | Set message based on language
+          if (lang == "ko" || lang == "") {
+              $('#alertMessage').text('최소 1개의 벤더를 선택해주세요.');
+          }
+          if (lang == "en") {
+              $('#alertMessage').text('Please select at least one vendor.');
+          }
+
+          // 경고 모달 표시 | Show warning modal
+          $modal = $('#warningAlert');
+          $modal.modal('show');
+          return false;
+        }
+
+        $('.filter-dropdown #clearVendors-' + country_code).trigger('click');
+        
+        $('#vendorUseBoxCnt-' + country_code).val(vendor_data.length).trigger('change');
+
+        for (var i=0; i < vendor_data.length; i++) {
+          $('#vendorUseBox-' + country_code).find('fieldset').eq(i).find('input:text').not(':last').each(function(j){
+            $(this).val(vendor_data[i][vendor_data_index_arr[j]]).trigger('input');
+            if($(this).attr('id').startsWith('vendorCPI_')) $(this).prev().find('.insert-currency').text(vendor_data[i][currency_col]);
+          });
+        }
+
+        $('#selectVendorsModal').modal('hide');
+      });
+
+      
+
+    });
+
+    $(document).on('hide.bs.modal', '#selectVendorsModal', function () {
+      
+      $('.dt-search').children().slice(0,-2).remove();
+      vendorDataTable.clear().destroy();
+      $('#vendorsTable').empty(); // Clear the DOM structure
+      $.fn.dataTable.ext.search = []; // Clear all filters
+
+      // unbind any existing event listeners
+      $(document).off('change', '.country-checkbox, .loi-checkbox, .type-checkbox');
+      $(document).off('input', '#searchIR');
+      $('input[id^=dt-search-]').off('input');
+      $('#clearFilter').off('click');
+      $('#countrySearch, #loiSearch,#typeSearch').off('keyup');
+      $('#loadVendors').off('click');
+      
+      $('[id^=openVendorModal]').find('.spinner').addClass('spinner-busy');
+      $('[id^=openVendorModal]').find('.spinner+span').hide();
+      $('[id^=openVendorModal]').addClass('disabled');
+      runWithRetry('getVendors', showVendors, GetFailAlert);
+    });
+
+    
+
+    // clear entire vendor section
+    $(document).on('click', '[id^=clearVendors-]', function(e){
+      e.preventDefault();
+
+      $(this).closest('.vendors-section').find('input:text').val('');
+      $(this).closest('.vendors-section').find('select[id^=vendorUseBoxCnt-]').val('1').trigger('change');
+
+      $(this).closest('.vendors-section').find('.insert-currency').text('');
+
+      $('.currency-symbol~.input-readonly').trigger('input');
+    });
+    // clear individual vendor fieldset
+    $(document).on('click', '.clear-vendor', function(){
+      var $parent = $(this).closest('fieldset');
+      var $nextFieldsets = $parent.nextAll('fieldset');
+
+      $parent.find('input:text').val('').trigger('input');
+      $parent.find('.insert-currency').text('');
+
+      // Helper function to decrement numbers in the pattern "_number-"
+      function decrementSpecificPattern(str) {
+          return str.replace(/_(\d+)-/, function (match, p1) {
+              return `_${parseInt(p1) - 1}-`;
+          });
+      }
+
+      if ($nextFieldsets.length) {
+        // Iterate through the next fieldsets to shift their content up
+        $nextFieldsets.each(function() {
+            var $current = $(this);
+            var $previous = $current.prev('fieldset');
+
+            // Copy data from the current fieldset to the previous one
+            $current.find('input:text').each(function () {
+                var $input = $(this);
+                var currentName = $input.attr('name');
+                var currentId = $input.attr('id');
+                var value = $input.val();
+
+                // Adjust name and ID for the previous fieldset
+                var newName = decrementSpecificPattern(currentName);
+                var newId = decrementSpecificPattern(currentId);
+
+                var $prevInputByName = $previous.find(`input[name="${newName}"]`);
+                var $prevInputById = $previous.find(`#${newId}`);
+
+                // Copy value if inputs are found
+                if ($prevInputByName.length) $prevInputByName.val(value);
+                if ($prevInputById.length) $prevInputById.val(value);
+            });
+
+            // Clear the current fieldset
+            $current.find('input:text').val('').trigger('input');
+        });
+      }
+
+    });
+
+    // clear entire form section
+    $(document).on('click', '[id^=clearForm-]', function(e){
+      e.preventDefault();
+
+      var country_name = $('.select-country-btn.active').nextAll('input.select-country-text').val();
+      var $formSection = $(this).closest('.form-section');
+
+      if(lang == "ko" || lang == "") {
+        $('#confirmMessage').text(country_name + '의 Form 부분을 초기화 하시겠습니까?');
+      }
+      if(lang == "en") {
+        $('#confirmMessage').text('Are you sure you want to reset Form section for ' + country_name + '?');
+      }
+
+      $modal = $('#confirmAlert');
+      $modal.find('button.modal-alert-btn-confrim').text('Reset');
+
+      $modal.modal('show');
+
+      $modal.find('button.modal-alert-btn-confrim').on('click', function(){
+      
+        // 폼 리셋 및 초기화 | Reset and initialize the form
+        $formSection.find('input:text').val('');
+        $formSection.find('[id^=projectName-]').val('');
+        $formSection.find('.selectpicker').selectpicker('val','');
+        $formSection.find('.selectpicker').selectpicker('refresh');
+  
+        endDate = moment();
+        $formSection.find('[id^=dateSelect-]').daterangepicker({
+            "singleDatePicker": true,
+            "startDate": endDate,
+            "maxDate": endDate,
+            "locale": {
+              "format": "M/D/YYYY"
+            }
+        });
+        // $formSection.find('[id^=managerSelect-]').find('option[data-tokens="'+ managerName +'"]').prop('selected',true);
+        // $formSection.find('[id^=managerSelect-]').selectpicker('refresh');
+        $formSection.find('[id^=managerSelect-]').val(managerName).change().selectpicker('refresh');
+
+      });
+      
+    });
+
+    // clear entire vendor section
+    $(document).on('click', '[id^=clearCalc-]', function(e){
+      e.preventDefault();
+
+      $(this).closest('.total-section').find('input:text').val('');
+      $(this).closest('.total-section').find('[id^=calcResultTable-] tbody tr').remove();
+
+      var country_code = $(this).attr('id').split(/-(.*)/s)[1];
+      var country_code_name = country_code.split('-')[0];
+      var country_code_num = country_code.split('-')[1] || 0;
+      
+      delete calcTotalObj[country_code_name][country_code_num];
+      
+      $('#v-pills-'+ country_code +'-tab').find('.select-country-table tbody td').empty();
+
+      CalculateFinalAmount();
+
+      $('.currency-symbol~.input-readonly').trigger('input');
+    });
+
+    $(document).on('input', '[id^=sampleNum]', function(){
+      var country_code = $(this).attr('id').split(/-(.*)/s)[1];
+
+      $('#totalTargetSample-' + country_code).val($(this).val());
+    });
+
+    //Calculate average CPI, feasibility, and costs in Vendors Section
+    $(document).on('input', '[id^=vendorFeasibility], [id^=vendorCPIKRW], [id^=vendorCost]', function(){
+      var country_code = $(this).attr('id').split(/-(.*)/s)[1];
+      
+      var $parent = $(this).closest('fieldset');
+      var $cardBody = $parent.closest('.card-body');
+
+      var $vendor_feasibility = $parent.find('input[id^=vendorFeasibility]');
+      var $vendor_cpi = $parent.find('input[id^=vendorCPIKRW]');
+      var $vendor_cost = $parent.find('input[id^=vendorCost]');
+      
+      var vendor_feasibility_val = parseInt($vendor_feasibility.val().replace(/,/g , ''), 10) || 0;
+      var vendor_cpi_val = parseInt($vendor_cpi.val().replace(/,/g , ''), 10) || 0;
+
+      var updateTotal = function(selector) {
+          var total = 0;
+          $cardBody.find(selector).each(function(){
+              total += parseInt($(this).val().replace(/,/g , ''), 10) || 0;
+          });
+          return total;
+      };
+
+      if (vendor_feasibility_val > 0 && vendor_cpi_val > 0) {
+          FlashBorder('#' + $vendor_cost.attr('id'));
+          $vendor_cost.val(AddComma(vendor_feasibility_val * vendor_cpi_val));
+      } else {
+          $vendor_cost.val('');
+      }
+
+      var total_feasibility_val = updateTotal('input[id^=vendorFeasibility]');
+      var total_costs_val = updateTotal('input[id^=vendorCost]');
+
+      $cardBody.find('input[id^=totalVendorFeasibility]').val(total_feasibility_val > 0 ? AddComma(total_feasibility_val) : '');
+      $cardBody.find('input[id^=totalVendorCosts]').val(total_costs_val > 0 ? AddComma(total_costs_val) : '').trigger('input');
+
+      $cardBody.find('input[id^=averageVendorCPI]').val(total_feasibility_val > 0 && total_costs_val > 0 ? 
+          AddComma(Math.round(total_costs_val / total_feasibility_val)) : '').trigger('input');
+
+      if($('#sampleNum-' + country_code).val() !== '') $('#totalTargetSample-' + country_code).val($('#sampleNum-' + country_code).val());
+    });
+
+    $(document).on('click','[id^=calcTotal]', function(e){
+      e.preventDefault();
+      
+      var country_code = $(this).attr('id').split(/-(.*)/s)[1];
+
+      // 입력값 가져오기 | Get input values
+      var total_feasibility_val = $('#totalVendorFeasibility-' + country_code).val();
+      var total_cost_val = $('#totalVendorCosts-' + country_code).val();
+      var avg_cpi_val = $('#averageVendorCPI-' + country_code).val();
+
+      $(this).closest('.dropdown-markup-select').find('button[data-bs-toggle="dropdown"]').dropdown('toggle');
+
+      // 아래 입력값이 비어 있으면 경고창 표시 | If input values below are empty, show warning popup
+      if (total_feasibility_val == "" || total_cost_val == "" || avg_cpi_val == "") {
+          // 언어에 따라 메시지 설정 | Set message based on language
+          if (lang == "ko" || lang == "") {
+              $('#alertMessage').text('벤더 정보를 모두 입력해주세요.');
+          }
+          if (lang == "en") {
+              $('#alertMessage').text('Please enter all vendor info.');
+          }
+
+          // 경고 모달 표시 | Show warning modal
+          $modal = $('#warningAlert');
+          $modal.modal('show');
+          return false;
+      }
+
+      // 테이블에 계산 결과 행 추가 | Append calculated result row to the table
+      AppendTotalVendorResult(country_code);
+
+      $('.currency-symbol~.input-readonly').trigger('input');
+
+    });
+
+    //when row is clicked in the Total section
+    $(document).on('click','[id^="calcResultTable"] tbody tr', function(){
+      var country_code = $(this).closest('[id^="calcResultTable"]').attr('id').split(/-(.*)/s)[1];
+      var country_code_name = country_code.split('-')[0];
+      var country_code_num = country_code.split('-')[1] || 0;
+      var index = $(this).index();
+
+      $('#calcResultTable-' + country_code).find('tbody tr').removeClass('table-active');
+      $(this).addClass('table-active');
+
+      //console.log(calcTotalObj[country_code][index]);
+
+      var $activeRow = $('#calcResultTable-' + country_code).find('.table-active td');
+      var $countryTableTd = $('#v-pills-'+ country_code +'-tab').find('.select-country-table tbody td');
+
+      var pro_cpi_val = $activeRow.eq(2).text();
+      var markup_val = $activeRow.eq(1).text();
+      var cost_val = $activeRow.eq(4).text();
+      var sales_val = $activeRow.eq(5).text();
+      var gm_per_val = $activeRow.eq(6).text();
+      var gm_val = $activeRow.eq(7).text();
+
+      $('#proposalCPI-' + country_code).val(pro_cpi_val); // .trigger('input')
+      $('#markUp-' + country_code).val(markup_val);
+      $('#expectedSales-' + country_code).val(sales_val); // .trigger('input')
+      $('#totalGMPer-' + country_code).val(gm_per_val);
+      $('#totalGM-' + country_code).val(gm_val); // .trigger('input')
+
+      $countryTableTd.eq(0).text(pro_cpi_val);
+      $countryTableTd.eq(1).text(markup_val);
+      $countryTableTd.eq(2).text(cost_val);
+      $countryTableTd.eq(3).text(sales_val);
+      $countryTableTd.eq(4).text(gm_per_val);
+      $countryTableTd.eq(5).text(gm_val);
+
+      $('#vendorForm-' + country_code).find('input').val('');
+      calcTotalObj[country_code_name][country_code_num][index].forEach(function (pair) {
+        var selector = `input[name="${ pair.name }"]`;
+        var input = $('#vendorForm-' + country_code).find(selector);
+        //input.val(pair.value).trigger('input');
+        input.val(pair.value);
+
+        if(pair.name.includes('Vendor Usage count')) {
+          $('#vendorUseBoxCnt-' + country_code).val(pair.value).trigger('change');
+        }
+      });
+
+      const sample_num = $('#sampleNum-' + country_code).val();
+      if(sample_num !== '') $('#totalTargetSample-' + country_code).val(sample_num);
+
+      CalculateFinalAmount();
+    });
+
+
+    //Add or remove currency symbol
+    $(document).on('input', '.currency-symbol~.input-readonly', function(){
+      if($(this).val() !== '') {
+        $(this).closest('.input-group').find('.currency-symbol').removeClass('d-none');
+        if($(this).attr('id').startsWith('proposalCPI')) $(this).closest('.total-card').find('.edit-input').removeClass('d-none');
+      } else {
+        $(this).closest('.input-group').find('.currency-symbol').addClass('d-none');
+        if($(this).attr('id').startsWith('proposalCPI')) $(this).closest('.total-card').find('.edit-input').addClass('d-none');
+      }
+    });
+
+
+
+    //dynamic change of input width in the total-amount-table section
+    $(document).on('input', '.total-amount-table input.input-readonly', function () {
+      $(this).closest('.input-group').find('.hide-input').text($(this).val());
+      //console.log('1: '+$(this).closest('.input-group').find('.hide-input').text());
+      if (!$(this).closest('tr').hasClass('d-none')) {
+        setTimeout(() => {
+          //console.log('2: '+$(this).closest('.input-group').find('.hide-input').width());
+          if($(this).closest('tr').hasClass('subtotal-amount')) {
+            if($(this).attr('id') === 'finalProgramming') {
+              if($(this).closest('.input-group').find('.hide-input').width() === 0){
+                $(this).width(70);
+              } else {
+                //console.log($(this).closest('.input-group').find('.hide-input').width());
+                $(this).width($(this).closest('.input-group').find('.hide-input').width() + 4);
+              }
+            } else {
+              $(this).width($(this).closest('.input-group').find('.hide-input').width() + 4);
+            }
+          }
+          if($(this).closest('tr').hasClass('final-amount')) $(this).width($(this).closest('.input-group').find('.hide-input').width() + 8);
+        },0);
+      }
+    });
+
+    $(document).on('click', '#showSubtotalAmount', function (e){
+      e.preventDefault();
+
+      if($('.subtotal-amount').hasClass('d-none')) {
+        $('.subtotal-amount').css('opacity','1');
+        $('.subtotal-amount').toggleClass('d-none',false);
+        
+        $(this).find('i').attr('class','bi bi-chevron-down'); 
+        CalculateSubtotalAmount();
+        $('.card-countries-list .card-footer .total-amount-table-container').css('height','165.5px');
+      } else {
+        $('.subtotal-amount').css('opacity','0');
+        $('.subtotal-amount').toggleClass('d-none',true);
+        
+        $(this).find('i').attr('class','bi bi-chevron-up'); 
+        $('.card-countries-list .card-footer .total-amount-table-container').css('height','99.5px');
+      }
+    });
+
+    $('.subtotal-amount').eq(0).on('click',function(){
+      $(this).find('input').focus();
+    });
+
+    $(document).on('input','input[id^=operationCost-],input[id^=overlayCost-]', function(){
+      CalculateSubtotalAmount();
+    });
+
+    $(document).on('input','.subtotal-amount input', function(){
+      if($('.final-amount:eq(0) input').val() !== '' && $('.final-amount:eq(1) input').val() !== '' && $('.final-amount:eq(2) input').val() !== ''){
+       CalculateFinalAmount();
+      }
+    });
+
+    $(document).on('show.bs.dropdown', '[id^=showBatchChangeDropdown]:parent', function() {
+      //var existing_countries = [];
+
+      var options = '';
+      var $formSection = $(this).closest('.form-section');
+
+      $formSection.find('[id^=countrySelectChange]').find('option').remove();
+
+      $('.select-country-btn').not('.active').each(function(){
+        const country_text = $(this).nextAll('input.select-country-text').val();
+        const country_code = $(this).attr('data-bs-target').split('#v-pills-')[1];
+        options += `<option data-tokens="${ country_text }" value="${ country_text }||${ country_code }">${ country_text }</option>`
+      });
+
+      $formSection.find('[id^=countrySelectChange]').append(options);
+
+      // 셀렉트 피커 새로고침 | Refresh the select picker
+      $formSection.find('[id^=countrySelectChange]').selectpicker('refresh');
+    });
+
+    $(document).on('click', '[id^=batchChange]', function(e) {
+      e.preventDefault();
+
+      var country_name = $('.select-country-btn.active').nextAll('input.select-country-text').val();
+      var country_code = $('.select-country-btn.active').attr('data-bs-target').split('#v-pills-')[1];
+      var rfq_date = $('#v-pills-'+country_code).find('[id^=dateSelect]').val();
+      var $formSection = $(this).closest('.form-section');
+
+      var change_selected_countries = $formSection.find("[id^=countrySelectChange]").val();
+      var form_array = $formSection.find(':input').serializeArray();
+
+      if(change_selected_countries.length === 0) {
+        // 현재 언어에 따라 메시지 설정 | Set the message based on the current language
+        if (lang == "ko" || lang == "") {
+          $('#alertMessage').text('폼 일괄 변경을 적용할 국가를 선택해주세요.');
+        }
+        if (lang == "en") {
+          $('#alertMessage').text('Please select countries you want to batch change form.');
+        }
+
+        // 경고 모달 표시 | Show the warning modal
+        $modal = $('#warningAlert');
+        $modal.modal('show');
+      } else {
+        var $dropdownBtn = $formSection.find('[id^=showBatchChangeDropdown]');
+
+        $dropdownBtn.find('.spinner').toggleClass('spinner-busy');
+        $dropdownBtn.find('.btn-text').toggleClass('d-none');
+
+        change_selected_countries.forEach(function(el){
+          form_array.forEach(function (pair) {
+            var selector = `input[name|="${ pair.name.split('-')[0] + '-' + el.split('||')[1] }"], 
+                            select[name|="${ pair.name.split('-')[0] + '-' + el.split('||')[1] }"]`;
+            var input = $('#quoteForm').find(selector);
+            input.val(pair.value);
+            if(input.hasClass('selectpicker')) { input.selectpicker('refresh'); }
+          });
+          RefreshDatePicker('#dateSelect-' + el.split('||')[1],rfq_date);
+        });
+
+        CalculateSubtotalAmount();
+        CalculateFinalAmount();
+
+        //runInit();
+        $('.selectpicker').selectpicker('refresh');
+
+        $formSection.find('[id^=showBatchChangeDropdown]').dropdown('toggle');
+
+        $dropdownBtn.find('.spinner').toggleClass('spinner-busy');
+        $dropdownBtn.find('.btn-text-complete').toggleClass('d-none');
+        $dropdownBtn.toggleClass('btn-border-blue');
+
+        setTimeout(() => {
+          $dropdownBtn.find('.btn-text').toggleClass('d-none');
+          $dropdownBtn.find('.btn-text-complete').toggleClass('d-none');
+          $dropdownBtn.toggleClass('btn-border-blue');
+        }, 2000);
+      }
+      
+    });
+
+
+    $(document).on('show.bs.dropdown', '#showCountryDropdown:parent', function() {
+      //google.script.run.withFailureHandler(e => { GetFailAlert(e) }).withSuccessHandler(showCountryAdd).getCountry();
+      runWithRetry('getCountry', showCountryAdd, GetFailAlert);
+    });
+
+    $(document).on('hidden.bs.dropdown', '#showCountryDropdown:parent', function() {
+      $('#countrySelectAdd').selectpicker('val','');
+      $('#countrySelectAdd').find('option').remove();
+      $('#countrySelectAdd').selectpicker('refresh');
+    });
+
+    $(document).on('hidden.bs.dropdown', '[id^=showBatchChangeDropdown]:parent', function() {
+      $(this).find('select.selectpicker').selectpicker('val','');
+      $(this).find('select.selectpicker').selectpicker('refresh');
+    });
+
+    $(document).on('click', '#addCountry', function(e) {
+      e.preventDefault();
+
+      var add_selected_countries = $("#countrySelectAdd").val();
+
+      if(add_selected_countries.length === 0) {
+        // 현재 언어에 따라 메시지 설정 | Set the message based on the current language
+        if (lang == "ko" || lang == "") {
+          $('#alertMessage').text('추가할 국가를 선택해주세요.');
+        }
+        if (lang == "en") {
+          $('#alertMessage').text('Please select countries you want to add.');
+        }
+
+        // 경고 모달 표시 | Show the warning modal
+        $modal = $('#warningAlert');
+        $modal.modal('show');
+      } else {
+        add_selected_countries.forEach(function(el){
+          cloneInputFormTemplate(el.split('-')[0].toLowerCase());
+          cloneClientSelectOS(el.split('-')[0].toLowerCase());
+          cloneCountrySelect(el);
+          RefreshDatePicker('#dateSelect-' + el.split('-')[0].toLowerCase(),endDate);
+          // $('#managerSelect-'+el.split('-')[0].toLowerCase()).find('option[data-tokens="'+ managerName +'"]').prop('selected',true);
+          // $('#managerSelect-'+el.split('-')[0].toLowerCase()).selectpicker('refresh');
+        });
+
+        //runInit();
+        
+        initLang();
+        initializeMarkupSelect2('[id^=markUpSelect]');
+        
+
+        $(".select-country-btn:last").click();
+        $('.countries-section div.card-body').scrollTop($('.countries-section div.card-body').height());
+
+        $('#showCountryDropdown').dropdown('toggle');
+
+        $('.selectpicker').selectpicker('refresh');
+      }
+      
+    });
+
+    // 헤더 부분의 [export] 버튼 클릭 시 | When [export] button in the header is clicked
+    $(document).on('click', '#exportAll', function (e) {
+      e.preventDefault(); // 이벤트 기본 동작 중단 | Prevent default event behavior
+      //$(this).removeClass("flash-save-btn"); // flash 버튼 클래스 제거 | Remove flash button class
+      $('#formType').val('export'); // 폼 유형 'save'로 설정 | Set form type to 'save'
+      ValidateForm(); // 폼 유효성 검사 | Validate form
+    });
+
+    $(document).on('click', '#save-exportAll', function (e) {
+      e.preventDefault(); // 이벤트 기본 동작 중단 | Prevent default event behavior
+      //$(this).removeClass("flash-save-btn"); // flash 버튼 클래스 제거 | Remove flash button class
+      $('#formType').val('save-export'); // 폼 유형 'save'로 설정 | Set form type to 'save'
+      ValidateForm(); // 폼 유효성 검사 | Validate form
+    });
+    //google.script.run.withSuccessHandler(function(url){window.open(url,"_blank");}).copySheet();
+
+  });
+</script>

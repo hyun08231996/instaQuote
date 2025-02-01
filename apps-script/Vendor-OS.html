@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--INCLUDE REQUIRED EXTERNAL JAVASCRIPT AND CSS LIBRARIES-->
+    
+    <!-- jQuery UI -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script> -->
+   
+
+    <!-- Date Range Picker -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+    <!-- Bootstrap CSS -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous"> -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"> -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- fontawesome -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Bootstrap-select -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/css/bootstrap-select.min.css"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
+
+    <!-- Select2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <!-- Or for RTL support -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" />
+
+    <!-- DataTables -->
+    <link href="https://cdn.datatables.net/v/bs5/dt-2.1.3/sl-2.0.4/datatables.min.css" rel="stylesheet">
+    <!-- <link href="https://cdn.datatables.net/v/dt/dt-2.1.3/sl-2.0.4/datatables.min.css" rel="stylesheet"> -->
+    <link href="https://cdn.datatables.net/fixedcolumns/5.0.1/css/fixedColumns.bootstrap5.css" rel="stylesheet">
+
+    <!-- bootstrap icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <link href='https://fonts.googleapis.com/css?family=Quattrocento Sans' rel='stylesheet'>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+ 
+    <?!= include('[CSS]Style'); ?> <!--INCLUDE [CSS]Style.html FILE-->
+    
+  </head>
+ 
+  <body>
+    {{NAV_SIDEBAR}}
+
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+      <div class="nav-body">
+
+        <!-- Page Title -->
+        <div class="page-title"><span class="rfq-type-tag">OS</span> Vendor List</div>
+
+      </div>
+    </nav>
+
+    <!-- Main body -->
+    <div class="main-body">
+      <div class="row">
+        <div class="card shadow-sm" style="height: calc(100vh - 100px);max-height: calc(100vh - 100px);">
+          <div class="card-body" style="height:100%;">
+            <div class="go-to-btn-container d-none" style="display:inline-block;"><a class="btn btn-outline-secondary btn-sm go-to-btn"
+              href="https://docs.google.com/spreadsheets/d/1pWFTXnpKhO6VOzHT7KsjrUPxmKFwfQdlatTKmWvTjUk/edit?gid=1004620658#gid=1004620658"
+              target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="Open Vendor List" role="button"><i
+                class="bi bi-box-arrow-up-right"></i></a></div>
+            <div class="dropdown filter-dropdown d-none" style="display: inline-block;">
+              <button type="button" id="showFilterDropdown" class="btn btn-outline-secondary btn-sm" data-bs-toggle="dropdown"
+                aria-expanded="false" data-bs-auto-close="outside">
+                <i class="bi bi-filter" style="display: flex;align-items: center;"></i> Filters
+                <span class="filter-cnt-total">0</span>
+              </button>
+              <div class="dropdown-menu p-2 filter-dropdown-menu">
+                <div>
+                  <div class="filter-header">
+                    <label for="filterSelect">Filters</label>
+                    <button id="clearFilter" class="btn btn-light btn-sm" style="background-color:white;position:relative;">
+                      <i class="fa fa-refresh" style="font-size:11px;" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                  <div class="accordion accordion-flush" id="filterAccordion">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingCountry">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                          data-bs-target="#collapseCountry" aria-expanded="true" aria-controls="collapseCountry">
+                          Country <span class="filter-cnt-subtotal filter-cnt-country">0</span>
+                        </button>
+                      </h2>
+                      <div id="collapseCountry" class="accordion-collapse collapse" aria-labelledby="headingCountry">
+                        <div class="accordion-body">
+                          <input type="search" id="countrySearch" class="form-control form-control-sm mb-2"
+                            placeholder="Search country" />
+                          <div id="countryFilters" class="form-check filter-list">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingType">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                          data-bs-target="#collapseType" aria-expanded="true" aria-controls="collapseType">
+                          Type <span class="filter-cnt-subtotal filter-cnt-type">0</span>
+                        </button>
+                      </h2>
+                      <div id="collapseType" class="accordion-collapse collapse" aria-labelledby="headingType">
+                        <div class="accordion-body">
+                          <input type="search" id="typeSearch" class="form-control form-control-sm mb-2"
+                            placeholder="Search type" />
+                          <div id="typeFilters" class="form-check filter-list">
+                            <div class="form-check">
+                              <input type="checkbox" class="form-check-input type-checkbox" id="type-checkbox-random"
+                                value="random">
+                              <label class="form-check-label" for="type-checkbox-random">random</label>
+                            </div>
+                            <div class="form-check">
+                              <input type="checkbox" class="form-check-input type-checkbox" id="type-checkbox-booster"
+                                value="booster">
+                              <label class="form-check-label" for="type-checkbox-booster">booster</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingLOI">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                          data-bs-target="#collapseLOI" aria-expanded="true" aria-controls="collapseLOI">
+                          LOI <span class="filter-cnt-subtotal filter-cnt-loi">0</span>
+                        </button>
+                      </h2>
+                      <div id="collapseLOI" class="accordion-collapse collapse" aria-labelledby="headingLOI">
+                        <div class="accordion-body">
+                          <input type="search" id="loiSearch" class="form-control form-control-sm mb-2" placeholder="Search loi" />
+                          <div id="loiFilters" class="form-check filter-list">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingIR">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                          data-bs-target="#collapseIR" aria-expanded="true" aria-controls="collapseIR">
+                          IR <span class="filter-cnt-subtotal filter-cnt-ir">0</span>
+                        </button>
+                      </h2>
+                      <div id="collapseIR" class="accordion-collapse collapse" aria-labelledby="headingIR">
+                        <div class="accordion-body">
+                          <input type="search" class="input-number form-control form-control-sm mb-2" placeholder="Search IR"
+                            id="searchIR" maxlength="3">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <table id="vListTable" class="table table-sm nowrap" width="100%">
+              <thead>
+              </thead>
+              <tbody style="font-size:13px;">
+              </tbody>
+            </table>
+            <div class="table-loading-spinner-container" style="height:100%;display:flex;align-items:center;justify-content:center;">
+              <span class="spinner table-loading-spinner spinner-border spinner-border-sm spinner-busy" role="status" style="width: 2rem;height: 2rem;color: #475562;" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {{FOOTER}}
+
+    <!-- Warning Alert Popup -->
+    <div class="modal fade" id="warningAlert" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="warningAlertLabel" aria-hidden="true">
+      <div class="modal-dialog" style="max-width:450px;">
+        <div class="modal-content shadow-lg" style="border-radius:10px;">
+          <div class="modal-header" style="padding: 1rem 1rem 0.1rem 1rem;border-bottom: none;">
+            <h5 class="modal-title" id="warningAlertLabel" style="font-size:18px;">Please check</h5>
+          </div>
+          <div class="modal-body" style="padding: 0.5rem 1rem 0.5rem 1rem;">
+            <div id="alertMessage" style="font-size:14px;"></div>
+          </div>
+          <div class="modal-footer" style="padding: 1rem;border-top: none;">
+            <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal" style="margin:0;padding-left:0.8rem;padding-right:0.8rem;">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirm Alert Popup -->
+    <div class="modal fade" id="confirmAlert" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="confirmAlertLabel" aria-hidden="true">
+      <div class="modal-dialog" style="max-width:450px;">
+        <div class="modal-content shadow-lg" style="border-radius:10px;">
+          <div class="modal-header" style="padding: 1rem 1rem 0.1rem 1rem;border-bottom: none;">
+            <h5 class="modal-title" id="confirmAlertLabel" style="font-size:18px;">Please confirm</h5>
+          </div>
+          <div class="modal-body" style="padding: 0.5rem 1rem 0.5rem 1rem;">
+            <div id="confirmMessage" style="font-size:14px;"></div>
+          </div>
+          <div class="modal-footer" style="padding: 1rem;border-top: none;">
+            <button type="button" class="btn btn-sm modal-alert-btn-cancel" data-bs-dismiss="modal" style="margin:0;padding-left:0.8rem;padding-right:0.8rem;">Cancel</button>
+            <button type="button" class="btn btn-primary btn-sm modal-alert-btn-confrim" data-bs-dismiss="modal" style="margin:0;padding-left:0.8rem;padding-right:0.8rem;">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Backdrop -->
+    <div id="toastBackdrop" class="toast-backdrop d-none"></div>
+    <!-- Success/Fail message popup -->
+    <div class="toast-container position-fixed p-3" style="z-index: 9999; left: 50%; top: 5px;width:350px;margin-left:-175px;">
+      <div id="successToast" class="toast fade shadow" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" tabindex="-1"><!--data-bs-delay="3000"-->
+        <div class="toast-header">
+          <!-- <img src="..." class="rounded mr-2" alt="..."> -->
+          <strong class="mr-auto" style="color:#00b5cb;font-size:115%;"><i class="bi bi-check2-circle"></i> Updated!</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" style="color:gray;font-size:90%;">
+          Status for <span style="font-weight:500">RFQ #<span id="successAlertId"></span></span> was updated successfully.
+        </div>
+      </div>
+      <div id="failToast" class="toast fade shadow" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" tabindex="-1">
+        <div class="toast-header">
+          <strong class="mr-auto" style="color:#cc2b4f;font-size:115%;"><i class="bi bi-exclamation-octagon"></i> Failed..</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" style="color:gray;font-size:90%;">
+          <span class="fail-error-message"></span>
+        </div>
+      </div>
+    </div>
+
+    
+    
+    <!--jQuery & jQueryUI cdn -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js" integrity="sha256-J8ay84czFazJ9wcTuSDLpPmwpMXOm573OUtZHPQqpEU=" crossorigin="anonymous"></script>
+
+    <!--bootstrap and popper cdn -->
+    
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script> -->
+
+    <!-- bootstrap select -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/js/bootstrap-select.min.js"></script> -->
+    <!-- Latest compiled and minified JavaScript -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/i18n/defaults-*.min.js"></script> -->
+    <?!= include('[JS]Bootstrap-Select.js'); ?>
+
+    <!-- Select2 -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/v/bs5/dt-2.1.3/sl-2.0.4/datatables.min.js"></script>
+    <!-- <script src="https://cdn.datatables.net/v/dt/dt-2.1.3/sl-2.0.4/datatables.min.js"></script> -->
+    <script src="https://cdn.datatables.net/plug-ins/2.1.6/features/scrollResize/dataTables.scrollResize.min.js"></script>
+    <script src="https://cdn.datatables.net/fixedcolumns/5.0.1/js/dataTables.fixedColumns.js"></script>
+    <script src="https://cdn.datatables.net/fixedcolumns/5.0.1/js/fixedColumns.bootstrap5.js"></script>
+
+
+    <!-- moment -->
+    <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
+    <!-- Date Range Picker -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+    <?!= include('[JS]Navbar'); ?> <!--INCLUDE [JS]Navbar.html FILE-->
+
+    <script>
+      var list_header;
+
+      google.script.run.withSuccessHandler(showVendors).withFailureHandler(function (error) {
+            console.error("Error in fetching RFQ data: ", error);
+          }).getVendors();
+
+      function showVendors(dataArray) {
+        $(document).ready(function() {
+          list_header = dataArray[0];
+
+          // Generate table
+          var theadHTML = '<tr>';
+          var tbodyHTML = '';
+
+          for (let i = 0; i < dataArray.length; i++) {
+            let rowHTML = '<tr>';
+
+            for (let j = 0; j < dataArray[0].length; j++) {
+              const td_val = dataArray[i][j] || '';
+              if (i === 0) {
+                theadHTML += `<th>${td_val}</th>`;
+              } else {
+                rowHTML += `<td>${td_val}</td>`;
+              }
+            }
+
+            rowHTML += '</tr>';
+            if (i === 0) {
+              theadHTML += '</tr>';
+            } else {
+              tbodyHTML += rowHTML;
+            }
+          }
+
+          $('#vListTable thead').html(theadHTML);
+          $('#vListTable tbody').html(tbodyHTML);
+
+          // Initialize DataTable
+          var vendorDataTable = $('#vListTable').DataTable({
+            //order: [],
+            language: { search: '', searchPlaceholder: "Search all" },
+            search: { return: true },
+            order: [[0, 'desc']],
+            scrollX: true,
+            scrollResize: true,
+            scrollCollapse: true,
+            scrollY: 100,
+            autoWidth: false,   // Disable auto width calculation to avoid issues with merged cells
+            paging: true,
+            pageLength: 25,
+            //ordering: false,      // Disable ordering because of merged cells
+            info: true,          // Disable table info to reduce DOM manipulation
+            autoWidth: false,     // Disable automatic width adjustments
+            destroy: true,        // Allow reinitialization without issues
+          });
+
+          
+          $('.dt-search').prepend($('.filter-dropdown'));
+          $('.dt-search').prepend($('.go-to-btn-container'));
+          $('.filter-dropdown,.go-to-btn-container').toggleClass('d-none');
+          $('.table-loading-spinner-container').toggleClass('d-none');
+          $('.table-loading-spinner').toggleClass('spinner-busy');
+
+          var country_col = list_header.findIndex(val => val == 'Country'),
+              loi_col = list_header.findIndex(val => val == 'LOI'),
+              type_col = list_header.findIndex(val => val == 'Type'),
+              ir_from_col = list_header.findIndex(val => val == 'IR_from'),
+              ir_to_col = list_header.findIndex(val => val == 'IR_to');
+
+          //$('#selectVendorsModal').modal('show');
+
+
+          function processColumnData(columnIdx, filterId, checkboxClass) {
+            const uniqueArray = [];
+            vendorDataTable.column(columnIdx).data().unique().each(function (value) {
+              if (filterId == 'statusFilters') { 
+                let elements = $(value);
+                value = $(elements[0]).attr('data-status'); 
+              }
+              if (value !== undefined) uniqueArray.push(value);
+            });
+            uniqueArray.sort().forEach(function (val) {
+              $(`.filter-dropdown-menu #${filterId}`).append(`
+                <div class="form-check">
+                  <input type="checkbox" class="form-check-input ${checkboxClass}" id="${checkboxClass}-${val}" value="${val}">
+                  <label class="form-check-label" for="${checkboxClass}-${val}">${val}</label>
+                </div>
+              `);
+            });
+          }
+
+          // Process each column
+          processColumnData(country_col, 'countryFilters', 'country-checkbox');
+          processColumnData(loi_col, 'loiFilters', 'loi-checkbox');
+
+          // Define groups and their corresponding column indexes
+          var groups = {
+            country: { selector: '.country-checkbox', column: country_col },
+            loi: { selector: '.loi-checkbox', column: loi_col },
+            type: { selector: '.type-checkbox', column: type_col }
+          };
+
+          $.fn.dataTable.ext.search.push(function (settings, rowData, rowIndex) {
+            var searchTerm = $('input[id^=dt-search-]').val();
+
+            // Step 1: Handle checkbox filters
+            var selectedFilters = {};
+            Object.keys(groups).forEach(function (key) {
+              var group = groups[key];
+              selectedFilters[key] = $(group.selector + ':checked').map(function () {
+                return this.value;
+              }).get();
+            });
+
+            var isFilterApplied = Object.values(selectedFilters).some(function (values) {
+              return values.length > 0;
+            });
+
+            var matchesFilters = Object.keys(selectedFilters).every(function (key) {
+              var group = groups[key];
+              var selectedValues = selectedFilters[key];
+
+              // Skip this filter if no values are selected for this group
+              if (selectedValues.length === 0) return true;
+
+              // Check if the cell value matches any of the selected values
+              var regex = new RegExp(selectedValues.join('|'));
+              var cellValue = key === 'type' && rowData[group.column].toLowerCase().includes('random') ? 'random' : key === 'type' && rowData[group.column].toLowerCase().includes('booster') ? 'booster' : rowData[group.column];
+              return regex.test(cellValue);
+            });
+
+            // Step 2: Handle search functionality
+            var matchesSearch = !searchTerm || new RegExp(searchTerm, 'i').test(rowData);
+
+            // Step 3: Handle IR search filtering
+            var matchesIR = $('#searchIR').val() === "" ? true : (Number(rowData[ir_from_col]) <= Number($('#searchIR').val()) && Number(rowData[ir_to_col]) >= Number($('#searchIR').val()));
+
+            // Row is shown if it matches all criteria: filters, search term, and IR range
+            return (!isFilterApplied || matchesFilters) && matchesSearch && matchesIR;
+          });
+
+          // const searchInput = document.querySelector("input[id^=dt-search-]");
+          // if (searchInput) {
+          //     searchInput.addEventListener("search", function () {
+          //         vendorDataTable.search('').draw(); // Clear DataTable search when triggered
+          //     });
+          // } else {
+          //     console.error('Element with ID "dt-search-" not found.');
+          // }
+
+          var totalCnt = 0; 
+          var before_ir_filter = true;
+
+          // Event listener for checkboxes
+          $(document).on('change', '.country-checkbox, .loi-checkbox, .type-checkbox', function () {
+            var countrySubCnt = $('.filter-dropdown-menu .form-check-input.country-checkbox:checked').length;
+            var loiSubCnt = $('.filter-dropdown-menu .form-check-input.loi-checkbox:checked').length;
+            var typeSubCnt = $('.filter-dropdown-menu .form-check-input.type-checkbox:checked').length;
+            totalCnt = $('.filter-dropdown-menu .form-check-input:checked').length;
+            //console.log(totalCnt);
+            $('.filter-dropdown .filter-cnt-country').text(countrySubCnt);
+            $('.filter-dropdown .filter-cnt-loi').text(loiSubCnt);
+            $('.filter-dropdown .filter-cnt-type').text(typeSubCnt);
+            $('.filter-dropdown .filter-cnt-total').text($('#searchIR').val().length === 0 ? totalCnt : totalCnt + 1);
+            vendorDataTable.draw(); // Trigger the custom filter
+          });
+
+          // Event listener for ir input
+          $(document).on('input', '#searchIR', function () {
+            if(before_ir_filter) {
+              //totalCnt++;
+              before_ir_filter = false;
+            }
+
+            if($(this).val().length === 0) {
+              //totalCnt--;
+              before_ir_filter = true;
+            } 
+
+            $('.filter-dropdown .filter-cnt-ir').text($(this).val().length === 0 ? '0' : '1');
+            $('.filter-dropdown .filter-cnt-total').text($('#searchIR').val().length === 0 ? totalCnt : totalCnt + 1);
+            vendorDataTable.draw(); // Trigger the custom filter
+          });
+
+          let debounceTimeout;
+          // Search event listener for DataTables' dt-search
+          $('input[id^=dt-search-]').on('input', function (e) {
+            clearTimeout(debounceTimeout); // Clear any pending redraw
+
+            // Set a timeout to redraw the vendorDataTable after 300ms
+            debounceTimeout = setTimeout(function () {
+              vendorDataTable.draw(); // Perform search within the already filtered data
+            }, 300); // Adjust delay time as needed (e.g., 200-500ms)
+
+            if ($(this).val().length === 0){
+              vendorDataTable.search('').draw();
+            }
+          });
+
+          // Reset filters button
+          $('#clearFilter').click(function () {
+            $('.filter-dropdown-menu .form-check-input:checked').prop('checked', false).trigger('change'); // Uncheck all checkboxes
+            $('#searchIR').val('').trigger('input');
+            
+            vendorDataTable.draw(); // Reset vendorDataTable filter
+          });
+
+          // Search inside the accordion
+          $('#countrySearch,#loiSearch,#typeSearch').on('keyup', function () {
+            var searchValue = $(this).val().toLowerCase();
+            $(this).closest('.accordion-body').find('.form-check').each(function () {
+              var label = $(this).find('label').text().toLowerCase();
+              $(this).toggle(label.indexOf(searchValue) > -1); // Show/hide based on search
+            });
+          });
+        });
+      }
+
+      
+    </script>
+    
+    <!--
+    <?!= include('[JS]Functions(Common)'); ?> 
+    <?!= include('[JS]Actions(Common)'); ?> 
+    <?!= include('[JS]JavaScript(CreateOS)'); ?> 
+    -->
+  </body>
+</html>

@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--INCLUDE REQUIRED EXTERNAL JAVASCRIPT AND CSS LIBRARIES-->
+    
+    <!-- jQuery UI -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script> -->
+   
+
+    <!-- Date Range Picker -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+    <!-- Bootstrap CSS -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous"> -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"> -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- fontawesome -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Bootstrap-select -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/css/bootstrap-select.min.css"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
+
+    <!-- Select2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <!-- Or for RTL support -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" />
+
+    <!-- DataTables -->
+    <link href="https://cdn.datatables.net/v/bs5/dt-2.1.3/sl-2.0.4/datatables.min.css" rel="stylesheet">
+    <!-- <link href="https://cdn.datatables.net/v/dt/dt-2.1.3/sl-2.0.4/datatables.min.css" rel="stylesheet"> -->
+    <link href="https://cdn.datatables.net/fixedcolumns/5.0.1/css/fixedColumns.bootstrap5.css" rel="stylesheet">
+
+    <!-- bootstrap icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <link href='https://fonts.googleapis.com/css?family=Quattrocento Sans' rel='stylesheet'>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+ 
+    <?!= include('[CSS]Style'); ?> <!--INCLUDE [CSS]Style.html FILE-->
+    
+  </head>
+ 
+  <body>
+    {{NAV_SIDEBAR}}
+
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+      <div class="nav-body">
+
+        <!-- Page Title -->
+        <div class="page-title">
+          <span class="rfq-type-tag">OS</span>
+          <span class="create-rfq-title"> Create RFQ</span>
+          <span class="edit-rfq-title d-none"> Edit <span class="edit-rfq-type">RFQ</span> <span class="edit-rfq-id"></span></span>
+        </div>
+
+        <div class="page-title-country fade" style="display:none;"><span class="page-title-country-flag-container"><img src="//:0" class="page-title-country-flag" width="33px" height="33px" /></span><span class="page-title-country-text"></span></div>
+
+        <!-- Nav bar buttons -->
+        <div class="navbar-btn-container" style="margin-left:auto;display:none;"><!-- display:none;-->
+
+          
+
+          <!-- Export RFQ button -->
+          <!-- <button id="exportAll" type="submit" class="btn-hover color-black" style="width:130px;"><span class="spinner spinner-border spinner-border-sm" style="margin-right:5px;" role="status" aria-hidden="true"></span>Export RFQ</button>&nbsp; -->
+
+          <!-- Save RFQ button -->
+          <!-- <button id="saveAll" type="submit" class="btn-hover color-blue" style="width:130px;"><span class="spinner spinner-border spinner-border-sm" style="margin-right:5px;" role="status" aria-hidden="true"></span>Save RFQ</button> -->
+
+          <div class="btn-group save-btn-group">
+            <button type="button" class="btn-hover color-blue main-save-btn" id="save-exportAll"><span class="spinner spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><i class="bi bi-save" style="font-size: 13px;"></i>&nbsp;&nbsp;Save &amp; Export</button>
+            <button type="button" class="btn btn-hover dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+              <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#" id="saveAll"><i class="bi bi-floppy" style="font-size: 12px;"></i>&nbsp;&nbsp;Save only</a></li>
+              <li><a class="dropdown-item" href="#" id="exportAll"><i class="bi bi-folder-symlink" style="font-size: 12px;"></i>&nbsp;&nbsp;Export only</a></li>
+              <li><a class="dropdown-item" href="#" id="saveDraft"><i class="bi bi-file-earmark-text" style="font-size: 12px;"></i>&nbsp;&nbsp;Save as draft</a></li>
+              <li class="d-none"><a class="dropdown-item" href="#" id="updateAll"><i class="bi bi-card-checklist" style="font-size: 12px;"></i>&nbsp;&nbsp;Update</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main body -->
+    <div class="page-loading-spinner-container d-none">
+      <span class="spinner page-loading-spinner spinner-border spinner-border-sm spinner-busy" role="status" style="width: 2rem;height: 2rem;color: #3d3d43;" aria-hidden="true"></span>
+    </div>
+    <div class="main-body" style="display:none;"><!-- style="display:none;"-->
+      <div class="row">
+        <div class="col-8" style="padding-left:8px !important;padding-right:8px !important;">
+          <iframe name="hidden-iframe" style="position: absolute; visibility: hidden" sandbox="allow-top-navigation allow-scripts allow-forms allow-same-origin allow-popups"></iframe><!-- sandbox="allow-top-navigation allow-scripts allow-forms allow-same-origin" -->
+          <!-- use for Live Link V2 -->
+          <form id="quoteForm" onsubmit="handleFormSubmit(this)" method="POST" action="https://script.google.com/macros/s/AKfycbzR4C6JvphST5AY-i8Gzpv1ECapoC0pwl4Xyv8qx4i2Mv8sIO8chVT4fKumq_VCIVr4/exec" target="hidden-iframe">
+            <div class="tab-content" id="v-pills-tabContent">
+            </div>
+
+            <!-- Hidden inputs -->
+            <div style="display:none">
+              <input type="hidden" name="Total feasibility" id="hidden_totalFeasibility">
+              <input type="hidden" name="Total programming fee" id="hidden_totalProgrammingFee">
+              <input type="hidden" name="Total overlay fee" id="hidden_totalOverlayFee">
+              <input type="hidden" name="Total other fee" id="hidden_totalOtherFee">
+              <input type="hidden" name="Total sales" id="hidden_totalSales">
+              <input type="hidden" name="Total GM" id="hidden_totalGM">
+              <input type="hidden" name="Total GM (%)" id="hidden_totalGMPer">
+              <input type="hidden" name="Country code list[]" id="countryCodeList">
+              <input type="hidden" name="Country list[]" id="countryList">
+              <input type="hidden" name="Export form list" id="exportFormList">
+              <input type="hidden" name="Last submit type" id="formType" value="save">
+              <input type="hidden" name="RFQ type" id="rfqType" value="OS">
+              <input type="hidden" name="RFQ ID" id="rfqId">
+            </div>
+          </form>
+          <template id="inputFormTemplate">
+            <div class="tab-pane fade country-input-form" id="v-pills-" role="tabpanel" aria-labelledby="v-pills--tab" tabindex="0">
+              <!-- Quotation form -->
+              <div class="card form-section shadow-sm">
+                <div class="card-header" style="background:none;font-size:1.2rem;font-weight: 500;padding:0.75rem !important;">
+                  <div style="color:#3d3d43;float:left;">Form</div>
+                  <div style="float:right;display:inline-flex;">
+                    <button id="clearForm" class="btn btn-light btn-sm" style="background-color:white;position:relative;font-size:65% !important;"><i class="fa fa-refresh" style="color:#6c757d;font-size:12.5px;" aria-hidden="true"></i></button>
+                    <div class="dropdown" style="display: inline-block;margin-left: 5px;">
+                      <button type="button" id="showBatchChangeDropdown" class="btn btn-outline-secondary btn-sm" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="false" style="font-size:65%;">
+                        <span class="spinner spinner-border spinner-border-sm" role="status" style="width: 1rem;height: 1rem;" aria-hidden="true"></span>
+                        <span class="btn-text">Batch Change</span>
+                        <span class="btn-text-complete d-none"><i class="bi bi-check2-circle"></i> Done!</span>
+                      </button>
+                      <div class="dropdown-menu p-2">
+                        <div class="mb-3">
+                          <label for="countrySelectChange">Choose countries to change form</label>
+                            
+                          <select class="form-control form-control-sm selectpicker show-tick" id="countrySelectChange" data-live-search="true" title="Choose" tabindex="-1" multiple required data-done-button="true" data-actions-box="true" data-selected-text-format="count > 3">
+                          </select>
+                        </div>
+                        <div align="right">
+                          <button id="batchChange" type="submit" class="btn btn-sm btn-primary" style="font-size:12px;">Change</button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div>
+                    <div class="row">
+                      <div class="form-group position-relative col-3">
+                        <label for="dateSelect"><span lang="ko">견적 날짜</span><span lang="en">RFQ Date</span> <span style="color:#cc2b4f;">*</span></label><br>
+                        <input type="text" class="form-control form-control-sm" name="RFQ Date" id="dateSelect" readonly required/>
+                        <i class="bi bi-calendar4"></i>
+                      </div>
+                      <div class="form-group col-3">
+                        <label for="managerSelect"><span lang="ko">세일즈 담당</span><span lang="en">Owner</span> <span style="color:#cc2b4f;">*</span></label><br>
+                        <select class="form-control form-control-sm selectpicker show-tick" name="Owner" id="managerSelect" title="Choose" required>
+                          <!-- <option data-tokens="seunghyun.nam">test</option> -->
+                          <option>User 1</option>
+                          <option>User 2</option>
+                          <option>User 3</option>
+                          <option>User 4</option>
+                          <option>User 5</option>
+                        </select>
+                      </div>
+                      <div class="form-group col-3">
+                        <label for="typeSelect"><span lang="ko">구분</span><span lang="en">Project type</span> <span style="color:#cc2b4f;">*</span></label><br>
+                        <select class="form-control form-control-sm selectpicker show-tick" name="Project type" id="typeSelect" title="Choose" required>
+                          <option>Type 1</option>
+                          <option>Type 2</option>
+                          <option>Type 3</option>
+                          <option>Type 4</option>
+                          <option>Others</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group col-3">
+                        <label for="samplingTypeSelect"><span lang="ko">샘플링 타입</span><span lang="en">Sampling type</span> <span style="color:#cc2b4f;">*</span></label><br>
+                        <select class="form-control form-control-sm selectpicker show-tick" name="Sampling type" id="samplingTypeSelect" title="Choose" required>
+                          <option>Random</option>
+                          <option>Booster</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-6">
+                        <label for="projectName"><span lang="ko">프로젝트명 (메일 제목)</span><span lang="en">Project name (Mail title)</span> <span style="color:#cc2b4f;">*</span></label>
+                        <div class="input-group">
+                            <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Sync Gmail" type="button" id="refreshGmail"><span class="spinner spinner-border spinner-border-sm" role="status" style="width: 1rem;height: 1rem;" aria-hidden="true"></span><span style="font-size:18px;"><i class="bi bi-envelope-arrow-down"></i></span></button>
+                          <input type="search" class="form-control form-control-sm" name="Project name (Mail title)" id="projectName" required>
+                        </div>
+                      </div>
+                      <div class="form-group col-3">
+                        <label for="picName"><span lang="ko">고객명</span><span lang="en">Client name</span> <span style="color:#cc2b4f;">*</span></label>
+                        <input type="text" class="form-control form-control-sm" name="Client name" id="picName" required>
+                      </div>
+                      <div class="form-group col-3">
+                        <label for="clientSelect"><span lang="ko">클라이언트</span><span lang="en">Client</span> <span style="color:#cc2b4f;">*</span></label><br>
+                        <select class="form-control form-control-sm selectpicker show-tick" name="Client" id="clientSelect" title="Choose" data-live-search="true" data-size="10" required>
+                          
+                        </select>
+                      </div>  
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-6">
+                        <label for="targetCondition"><span lang="ko">대상자 조건</span><span lang="en">Targeting condition</span> <span style="color:#cc2b4f;">*</span></label>
+                        <input type="text" class="form-control form-control-sm" name="Targeting condition" id="targetCondition" required>
+                      </div>
+                      <div class="form-group col-3">
+                        <label for="loiInput">LOI (min) <span style="color:#cc2b4f;">*</span></label>
+                        <div class="input-group">
+                          <input type="text" class="input-number form-control form-control-sm" name="LOI" id="loiInput" required>
+                        </div>
+                        <div class="invalid-tooltip invalid-tooltip-loi">
+                          Please enter number 0~<span id="maxLoi">60</span>.
+                        </div>
+                      </div>
+                      
+                      <div class="form-group col-3">
+                        <label for="sampleNum"><span lang="ko">요청 샘플수</span><span lang="en">Requested N</span> <span style="color:#cc2b4f;">*</span></label>
+                        <input type="text" class="input-number form-control form-control-sm" name="Requested N" id="sampleNum" required>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-group col">
+                      <label for="operationCost"><span lang="ko">운영비</span><span lang="en">Other fee</span></label>
+                      <input type="text" class="input-number form-control form-control-sm" name="Other fee" id="operationCost">
+                    </div>
+                    <div class="form-group col">
+                      <label for="overlayCost"><span lang="ko">오버레이 비용</span><span lang="en">Overlay fee</span></label>
+                      <input type="text" class="input-number form-control form-control-sm" name="Overlay fee" id="overlayCost">
+                    </div>
+                    
+                    <div class="form-group col">
+                      <label for="questionNum"><span lang="ko">문항 수</span><span lang="en">Question N</span></label>
+                      <input type="text" class="input-number form-control form-control-sm" name="Question N" id="questionNum">
+                    </div>
+                    <div class="form-group col">
+                      <label for="pageNum"><span lang="ko">설문 페이지수</span><span lang="en">Page N</span></label>
+                      <input type="text" class="input-number form-control form-control-sm" name="Page N" id="pageNum">
+                    </div>
+                    
+                  </div>
+
+                  <!-- Hidden inputs -->
+                  <div style="display:none">
+                    <input type="hidden" name="Country" id="countryName">
+                    <input type="hidden" name="Country (kr)" id="countryNameKr">
+                    <input type="hidden" name="Country (rename)" id="countryRename">
+                  </div>
+                    
+                </div>
+              </div>
+              <br>
+              <!-- Vendors -->
+              <div class="card vendors-section shadow-sm">
+                <div class="card-header" style="background:none;font-size:1.2rem;font-weight: 500;padding:0.75rem !important;">
+                  <div style="color:#3d3d43;float:left;">Vendors</div>
+                  <div style="float:right;display:inline-flex;">
+                    <button id="clearVendors" class="btn btn-light btn-sm" style="background-color:white;position:relative;font-size:65% !important;"><i class="fa fa-refresh" style="color:#6c757d;font-size:12.5px;" aria-hidden="true"></i></button>
+                    <button id="openVendorModal" class="btn btn-outline-secondary btn-sm" style="position:relative;font-size: 65% !important;margin-left:5px;">
+                      <span class="spinner spinner-border spinner-border-sm" role="status" style="width: 1rem;height: 1rem;" aria-hidden="true"></span>
+                      <span>Select</span>
+                    </button>
+                  </div>
+                </div>
+                <div id="vendorForm" class="card-body">
+                  <div class="row total-card-container">
+                    <div class="card total-card col">
+                      <label for="averageVendorCPI">Average CPI</label>
+                      <!-- <input type="text" class="input-number input-readonly form-control form-control-sm" name="Average vendor CPI" id="averageVendorCPI" readonly> -->
+                      <div class="input-group input-group-sm flex-nowrap">
+                        <span class="input-group-text currency-symbol d-none">₩</span>
+                        <input type="text" class="input-number input-readonly form-control form-control-sm" name="Average CPI" id="averageVendorCPI" readonly required>
+                      </div>
+                    </div>
+                    <div class="card total-card col">
+                      <label for="totalTargetSample">Target sample</label>
+                      <input type="text" class="input-number input-readonly form-control form-control-sm" name="Target sample" id="totalTargetSample" readonly required>
+                    </div>
+                    <div class="card total-card col">
+                      <label for="totalVendorFeasibility">Feasibility</label>
+                      <input type="text" class="input-number input-readonly form-control form-control-sm" name="Feasibility" id="totalVendorFeasibility" readonly required>
+                    </div>
+                    <div class="card total-card col">
+                      <label for="totalVendorCosts">Cost</label>
+                      <!-- <input type="text" class="input-number input-readonly form-control form-control-sm" name="Total vendor costs" id="totalVendorCosts" readonly> -->
+                      <div class="input-group input-group-sm flex-nowrap">
+                        <span class="input-group-text currency-symbol d-none">₩</span>
+                        <input type="text" class="input-number input-readonly form-control form-control-sm" name="Cost" id="totalVendorCosts" readonly required>
+                      </div>
+                    </div>
+                    <div align="right" class="vendor-box-cnt col-2">
+                      <select class="form-select form-selected-sm" id="vendorUseBoxCnt" name="Vendor Usage count" style="width:50% !important;height: 1.75rem !important;padding: 0.15rem 0.5rem !important;font-size:14px !important;border-radius:0.5rem;">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div id="vendorUseBox">
+                    <fieldset class="scheduler-border position-relative" style="margin-top:0 !important;">
+                      <button class="btn btn-sm clear-vendor position-absolute" type="button"><i class="bi bi-arrow-clockwise"></i></button>
+                      <legend class="scheduler-border">Vendor ①</legend>
+                      <div class="control-group">
+                        <div class="row">
+                          <div class="form-group col">
+                            <label for="vendorName_1"><span lang="ko">업체명</span><span lang="en">Vendor name</span></label>
+                            <input type="text" class="form-control form-control-sm" name="Vendor name_1" id="vendorName_1">
+                          </div>
+                          <div class="form-group col-1">
+                            <label for="vendorIRFrom_1">IR</label>
+                            <input type="text" class="input-number form-control form-control-sm" name="Vendor IR_from_1" id="vendorIRFrom_1">
+                          </div>
+                          <div class="form-group col-1">
+                            <label style="visibility:hidden;" for="vendorIRTo_1">IR</label>
+                            <div class="tilde position-relative"><input type="text" class="input-number form-control form-control-sm" name="Vendor IR_to_1" id="vendorIRTo_1"></div>
+                          </div>
+                          <div class="form-group col">
+                            <label for="vendorFeasibility_1"><span lang="ko">가능수</span><span lang="en">Feasiblity</span></label>
+                            <input type="text" class="input-number form-control form-control-sm" name="Vendor feasibility_1" id="vendorFeasibility_1">
+                          </div>
+                          <div class="form-group col">
+                            <label for="vendorCPI_1">CPI (<span class="insert-currency"></span>)</label>
+                            <input type="text" class="input-number allow-decimals form-control form-control-sm" name="Vendor CPI_1" id="vendorCPI_1">
+                          </div>
+                          <div class="form-group col">
+                            <label for="vendorCPIKRW_1">CPI (KRW)</label>
+                            <input type="text" class="input-number form-control form-control-sm" name="Vendor CPI (KRW)_1" id="vendorCPIKRW_1">
+                          </div>
+                          <div class="form-group col-1 d-none">
+                            <label for="vendorCurrency_1"><span lang="ko">통화</span><span lang="en">Currency</span></label>
+                            <input type="text" class="form-control form-control-sm" name="Vendor currency_1" id="vendorCurrency_1">
+                          </div>
+                          <div class="form-group col d-none">
+                            <label for="vendorERate_1"><span lang="ko">환율</span><span lang="en">Exchange rate</span></label>
+                            <input type="text" class="input-number form-control form-control-sm" name="Vendor exchange rate_1" id="vendorERate_1">
+                          </div>
+                          <div class="form-group col">
+                            <label for="vendorCost_1"><span lang="ko">비용</span><span lang="en">Costs</span></label>
+                            <input type="text" class="input-number form-control form-control-sm" name="Vendor cost_1" id="vendorCost_1">
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
+                    <fieldset class="scheduler-border position-relative d-none">
+                      <button class="btn btn-sm clear-vendor position-absolute" type="button"><i class="bi bi-arrow-clockwise"></i></button>
+                      <legend class="scheduler-border">Vendor ②</legend>
+                      <div class="control-group">
+                        <div class="row">
+                          <div class="form-group col">
+                            <label for="vendorName_2"><span lang="ko">업체명</span><span lang="en">Vendor name</span></label>
+                            <input type="text" class="form-control form-control-sm" name="Vendor name_2" id="vendorName_2">
+                          </div>
+                          <div class="form-group col-1">
+                            <label for="vendorIRFrom_2">IR</label>
+                            <input type="text" class="input-number form-control form-control-sm" name="Vendor IR_from_2" id="vendorIRFrom_2">
+                          </div>
+                          <div class="form-group col-1">
+                            <label style="visibility:hidden;" for="vendorIRTo_2">IR</label>
+                            <div class="tilde position-relative"><input type="text" class="input-number form-control form-control-sm" name="Vendor IR_to_2" id="vendorIRTo_2"></div>
+                          </div>
+                          <div class="form-group col">
+                            <label for="vendorFeasibility_2"><span lang="ko">가능수</span><span lang="en">Feasiblity</span></label>
+                            <input type="text" class="input-number form-control form-control-sm" name="Vendor feasibility_2" id="vendorFeasibility_2">
+                          </div>
+                          <div class="form-group col">
+                            <label for="vendorCPI_2">CPI (<span class="insert-currency"></span>)</label>
+                            <input type="text" class="input-number allow-decimals form-control form-control-sm" name="Vendor CPI_2" id="vendorCPI_2">
+                          </div>
+                          <div class="form-group col">
+                            <label for="vendorCPIKRW_2">CPI (KRW)</label>
+                            <input type="text" class="input-number form-control form-control-sm" name="Vendor CPI (KRW)_2" id="vendorCPIKRW_2">
+                          </div>
+                          <div class="form-group col-1 d-none">
+                            <label for="vendorCurrency_2"><span lang="ko">통화</span><span lang="en">Currency</span></label>
+                            <input type="text" class="form-control form-control-sm" name="Vendor currency_2" id="vendorCurrency_2">
+                          </div>
+                          <div class="form-group col d-none">
+                            <label for="vendorERate_2"><span lang="ko">환율</span><span lang="en">Exchange rate</span></label>
+                            <input type="text" class="input-number form-control form-control-sm" name="Vendor exchange rate_2" id="vendorERate_2">
+                          </div>
+                          <div class="form-group col">
+                            <label for="vendorCost_2"><span lang="ko">비용</span><span lang="en">Costs</span></label>
+                            <input type="text" class="input-number form-control form-control-sm" name="Vendor cost_2" id="vendorCost_2">
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
+                    <fieldset class="scheduler-border position-relative d-none">
+                      <button class="btn btn-sm clear-vendor position-absolute" type="button"><i class="bi bi-arrow-clockwise"></i></button>
+                      <legend class="scheduler-border">Vendor ③</legend>
+                      <div class="control-group">
+                        <div class="row">
+                          <div class="form-group col">
+                            <label for="vendorName_3"><span lang="ko">업체명</span><span lang="en">Vendor name</span></label>
+                            <input type="text" class="form-control form-control-sm" name="Vendor name_3" id="vendorName_3">
+                          </div>
+                          <div class="form-group col-1">
+                            <label for="vendorIRFrom_3">IR</label>
+                            <input type="text" class="input-number form-control form-control-sm" name="Vendor IR_from_3" id="vendorIRFrom_3">
+                          </div>
+                          <div class="form-group col-1">
+                            <label style="visibility:hidden;" for="vendorIRTo_3">IR</label>
+                            <div class="tilde position-relative"><input type="text" class="input-number form-control form-control-sm" name="Vendor IR_to_3" id="vendorIRTo_3"></div>
+                          </div>
+                          <div class="form-group col">
+                            <label for="vendorFeasibility_3"><span lang="ko">가능수</span><span lang="en">Feasiblity</span></label>
+                            <input type="text" class="input-number form-control form-control-sm" name="Vendor feasibility_3" id="vendorFeasibility_3">
+                          </div>
+                          <div class="form-group col">
+                            <label for="vendorCPI_3">CPI (<span class="insert-currency"></span>)</label>
+                            <input type="text" class="input-number allow-decimals form-control form-control-sm" name="Vendor CPI_3" id="vendorCPI_3">
+                          </div>
+                          <div class="form-group col">
+                            <label for="vendorCPIKRW_3">CPI (KRW)</label>
+                            <input type="text" class="input-number form-control form-control-sm" name="Vendor CPI (KRW)_3" id="vendorCPIKRW_3">
+                          </div>
+                          <div class="form-group col-1 d-none">
+                            <label for="vendorCurrency_3"><span lang="ko">통화</span><span lang="en">Currency</span></label>
+                            <input type="text" class="form-control form-control-sm" name="Vendor currency_3" id="vendorCurrency_3">
+                          </div>
+                          <div class="form-group col d-none">
+                            <label for="vendorERate_3"><span lang="ko">환율</span><span lang="en">Exchange rate</span></label>
+                            <input type="text" class="input-number form-control form-control-sm" name="Vendor exchange rate_3" id="vendorERate_3">
+                          </div>
+                          <div class="form-group col">
+                            <label for="vendorCost_3"><span lang="ko">비용</span><span lang="en">Costs</span></label>
+                            <input type="text" class="input-number form-control form-control-sm" name="Vendor cost_3" id="vendorCost_3">
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
+                    <fieldset class="scheduler-border position-relative d-none">
+                      <button class="btn btn-sm clear-vendor position-absolute" type="button"><i class="bi bi-arrow-clockwise"></i></button>
+                      <legend class="scheduler-border">Vendor ④</legend>
+                      <div class="control-group">
+                        <div class="row">
+                          <div class="form-group col">
+                            <label for="vendorName_4"><span lang="ko">업체명</span><span lang="en">Vendor name</span></label>
+                            <input type="text" class="form-control form-control-sm" name="Vendor name_4" id="vendorName_4">
+                          </div>
+                          <div class="form-group col-1">
+                            <label for="vendorIRFrom_4">IR</label>
+                            <input type="text" class="input-number form-control form-control-sm" name="Vendor IR_from_4" id="vendorIRFrom_4">
+                          </div>
+                          <div class="form-group col-1">
+                            <label style="visibility:hidden;" for="vendorIRTo_4">IR</label>
+                            <div class="tilde position-relative"><input type="text" class="input-number form-control form-control-sm" name="Vendor IR_to_4" id="vendorIRTo_4"></div>
+                          </div>
+                          <div class="form-group col">
+                            <label for="vendorFeasibility_4"><span lang="ko">가능수</span><span lang="en">Feasiblity</span></label>
+                            <input type="text" class="input-number form-control form-control-sm" name="Vendor feasibility_4" id="vendorFeasibility_4">
+                          </div>
+                          <div class="form-group col">
+                            <label for="vendorCPI_4">CPI (<span class="insert-currency"></span>)</label>
+                            <input type="text" class="input-number allow-decimals form-control form-control-sm" name="Vendor CPI_4" id="vendorCPI_4">
+                          </div>
+                          <div class="form-group col">
+                            <label for="vendorCPIKRW_4">CPI (KRW)</label>
+                            <input type="text" class="input-number form-control form-control-sm" name="Vendor CPI (KRW)_4" id="vendorCPIKRW_4">
+                          </div>
+                          <div class="form-group col-1 d-none">
+                            <label for="vendorCurrency_4"><span lang="ko">통화</span><span lang="en">Currency</span></label>
+                            <input type="text" class="form-control form-control-sm" name="Vendor currency_4" id="vendorCurrency_4">
+                          </div>
+                          <div class="form-group col d-none">
+                            <label for="vendorERate_4"><span lang="ko">환율</span><span lang="en">Exchange rate</span></label>
+                            <input type="text" class="input-number form-control form-control-sm" name="Vendor exchange rate_4" id="vendorERate_4">
+                          </div>
+                          <div class="form-group col">
+                            <label for="vendorCost_4"><span lang="ko">비용</span><span lang="en">Costs</span></label>
+                            <input type="text" class="input-number form-control form-control-sm" name="Vendor cost_4" id="vendorCost_4">
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
+                    <fieldset class="scheduler-border position-relative d-none">
+                      <button class="btn btn-sm clear-vendor position-absolute" type="button"><i class="bi bi-arrow-clockwise"></i></button>
+                      <legend class="scheduler-border">Vendor ⑤</legend>
+                      <div class="control-group">
+                        <div class="row">
+                          <div class="form-group col">
+                            <label for="vendorName_5"><span lang="ko">업체명</span><span lang="en">Vendor name</span></label>
+                            <input type="text" class="form-control form-control-sm" name="Vendor name_5" id="vendorName_5">
+                          </div>
+                          <div class="form-group col-1">
+                            <label for="vendorIRFrom_5">IR</label>
+                            <input type="text" class="input-number form-control form-control-sm" name="Vendor IR_from_5" id="vendorIRFrom_5">
+                          </div>
+                          <div class="form-group col-1">
+                            <label style="visibility:hidden;" for="vendorIRTo_5">IR</label>
+                            <div class="tilde position-relative"><input type="text" class="input-number form-control form-control-sm" name="Vendor IR_to_5" id="vendorIRTo_5"></div>
+                          </div>
+                          <div class="form-group col">
+                            <label for="vendorFeasibility_5"><span lang="ko">가능수</span><span lang="en">Feasiblity</span></label>
+                            <input type="text" class="input-number form-control form-control-sm" name="Vendor feasibility_5" id="vendorFeasibility_5">
+                          </div>
+                          <div class="form-group col">
+                            <label for="vendorCPI_5">CPI (<span class="insert-currency"></span>)</label>
+                            <input type="text" class="input-number allow-decimals form-control form-control-sm" name="Vendor CPI_5" id="vendorCPI_5">
+                          </div>
+                          <div class="form-group col">
+                            <label for="vendorCPIKRW_5">CPI (KRW)</label>
+                            <input type="text" class="input-number form-control form-control-sm" name="Vendor CPI (KRW)_5" id="vendorCPIKRW_5">
+                          </div>
+                          <div class="form-group col-1 d-none">
+                            <label for="vendorCurrency_5"><span lang="ko">통화</span><span lang="en">Currency</span></label>
+                            <input type="text" class="form-control form-control-sm" name="Vendor currency_5" id="vendorCurrency_5">
+                          </div>
+                          <div class="form-group col d-none">
+                            <label for="vendorERate_5"><span lang="ko">환율</span><span lang="en">Exchange rate</span></label>
+                            <input type="text" class="input-number form-control form-control-sm" name="Vendor exchange rate_5" id="vendorERate_5">
+                          </div>
+                          <div class="form-group col">
+                            <label for="vendorCost_5"><span lang="ko">비용</span><span lang="en">Costs</span></label>
+                            <input type="text" class="input-number form-control form-control-sm" name="Vendor cost_5" id="vendorCost_5">
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+              </div>
+              
+              <br>
+              <!-- Total -->
+              <div class="card total-section shadow-sm">
+                <div class="card-header" style="background:none;font-size:1.2rem;font-weight: 500;padding:0.75rem !important;">
+                  <div style="float:left;"><span style="color:#3d3d43;">Total</span> 
+                  </div>
+                  <div style="float:right;display:inline-flex;">
+                    <button id="clearCalc" class="btn btn-light btn-sm" style="background-color:white;position:relative;font-size:65% !important;"><i class="fa fa-refresh" style="color:#6c757d;font-size:12.5px;" aria-hidden="true"></i></button>
+                    <!-- <a type="button" id="calcTotal" class="btn btn-outline-secondary btn-sm" data-bs-toggle="popover" title="Markup" 
+                    data-bs-html="true" data-bs-trigger="focus" data-bs-placement="bottom" data-bs-sanitize="false"
+                    data-bs-content='<div class="select-editable"><select onchange="this.nextElementSibling.value=this.value"><option value=""></option><option value="1.2">1.2</option><option value="1.3">1.3</option><option value="1.4">1.4</option><option value="1.5">1.5</option><option value="1.6">1.6</option><option value="1.7">1.7</option></select><input type="text" name="format" value="" /></div><button class="button btn btn-sm btn-primary" type="button">Apply</button>'
+                    style="position:relative;font-size: 65% !important;">Calculate</a> -->
+                    <div class="dropdown-center dropdown-markup-select" style="display: inline-block;margin-left: 5px;">
+                      <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="false" style="font-size:65%;">
+                        Calculate
+                      </button>
+                      <form class="dropdown-menu p-2">
+                        <div class="mb-3">
+                          <label for="markUpSelect" style="font-size:12px !important;">Markup</label>
+                          <select class="form-select form-select-sm" id="markUpSelect" required>
+                            <option value="1.2" selected="selected">1.2</option>
+                            <option value="1.3">1.3</option>
+                            <option value="1.4">1.4</option>
+                            <option value="1.5">1.5</option>
+                            <option value="1.6">1.6</option>
+                            <option value="1.7">1.7</option>
+                          </select>
+                        </div>
+                        <button id="calcTotal" type="submit" class="btn btn-sm btn-primary" style="font-size:12px;">Apply</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body" style="font-size:14px;">
+                  <div class="row total-card-container">
+                    <div class="card total-card col">
+                      <label class="position-relative" for="proposalCPI">Proposal CPI&nbsp;
+                        <button class="btn btn-sm position-absolute d-none edit-input" type="button"><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-sm position-absolute d-none cancel-edit" type="button"><i class="bi bi-x-circle"></i></button>&nbsp;
+                        <button class="btn btn-sm position-absolute d-none save-edit" type="button"><i class="bi bi-check-circle"></i></button>
+                      </label>
+                      <!-- <input type="text" class="input-number input-readonly form-control form-control-sm" name="Average vendor CPI" id="averageVendorCPI" readonly> -->
+                      <div class="input-group input-group-sm flex-nowrap">
+                        <span class="input-group-text currency-symbol d-none">₩</span>
+                        <input type="text" class="input-number input-readonly form-control form-control-sm" name="Proposal CPI" id="proposalCPI" readonly required>
+                      </div>
+                    </div>
+                    <div class="card total-card col">
+                      <label for="markUp">Markup</label>
+                      <input type="text" class="input-number input-readonly form-control form-control-sm" name="Markup" id="markUp" readonly required>
+                    </div>
+                    <div class="card total-card col">
+                      <label for="expectedSales">Sales</label>
+                      <!-- <input type="text" class="input-number input-readonly form-control form-control-sm" name="Average vendor CPI" id="averageVendorCPI" readonly> -->
+                      <div class="input-group input-group-sm flex-nowrap">
+                        <span class="input-group-text currency-symbol d-none">₩</span>
+                        <input type="text" class="input-number input-readonly form-control form-control-sm" name="Sales" id="expectedSales" readonly required>
+                      </div>
+                    </div>
+                    <div class="card total-card col">
+                      <label for="totalGMPer">GM (%)</label>
+                      <input type="text" class="input-number input-readonly form-control form-control-sm" name="GM (%)" id="totalGMPer" readonly required>
+                    </div>
+                    <div class="card total-card col">
+                      <label for="totalGM">GM</label>
+                      <!-- <input type="text" class="input-number input-readonly form-control form-control-sm" name="Total vendor costs" id="totalVendorCosts" readonly> -->
+                      <div class="input-group input-group-sm flex-nowrap">
+                        <span class="input-group-text currency-symbol d-none">₩</span>
+                        <input type="text" class="input-number input-readonly form-control form-control-sm" name="GM" id="totalGM" readonly required>
+                      </div>
+                    </div>
+                  </div>
+                  <table id="calcResultTable" class="table table-sm table-hover table-striped">
+                      <thead align="center">
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Average<br>CPI</th>
+                          <th scope="col">Markup</th>
+                          <th scope="col">Proposal<br>CPI</th>
+                          <th scope="col">Feasibility</th>
+                          <th scope="col">Cost</th>
+                          <th scope="col">Sales</th>
+                          <th scope="col">GM (%)</th>
+                          <th scope="col">GM</th>
+                        </tr>
+                      </thead>
+                      <tbody align="center">
+                      </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <!-- Select countries -->
+        <div class="col-4 countries-section position-relative" style="padding-left:8px !important;padding-right:8px !important;">
+          <div class="card position-fixed shadow card-countries-list">
+            <div class="card-header" style="background:none;font-size:1.2rem;font-weight: 500;padding:0.75rem !important;">
+              <div style="color:#3d3d43;float:left;display:inline-block;vertical-align:bottom;margin-right:20px;">Countries</div>
+              <div style="float:right;">
+                <!-- <button id="addCountry" class="btn btn-outline-secondary btn-sm" style="position:relative;font-size: 65% !important;">Add</button> -->
+                <div class="dropdown" style="display: inline-block;margin-left: 5px;">
+                  <button type="button" id="showCountryDropdown" class="btn btn-outline-secondary btn-sm" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="false" style="font-size:65%;">
+                    Add
+                  </button>
+                  <div class="dropdown-menu p-2">
+                    <div class="mb-3">
+                      <label for="countrySelectAdd">Choose countries to add</label>
+                        
+                      <select class="form-control form-control-sm selectpicker show-tick" id="countrySelectAdd" data-live-search="true" title="Choose" tabindex="-1" multiple required data-done-button="true" data-selected-text-format="count > 3" data-size="10">
+                      </select>
+                    </div>
+                    <div align="right">
+                      <button id="addCountry" type="submit" class="btn btn-sm btn-primary" style="font-size:12px;">Add</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <!-- <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">Home</button>
+                <button class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">Profile</button>
+                <button class="nav-link" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">Messages</button>
+                <button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</button> -->
+              </div>
+              <!-- <div class="d-grid add-country-btn-container">
+                <button class="btn btn-primary btn-sm add-country-btn" type="button" id="addCountry"><i class="bi bi-plus-lg"></i></button>
+              </div> -->
+            </div>
+            <div class="card-footer">
+              <div class="total-amount-table-container shadow">
+                <div style="display: flex;align-items: center;height: 17px;"><button class="btn btn-sm" id="showSubtotalAmount"><i class="bi bi-chevron-up"></i></button></div>
+                <table class="total-amount-table table-sm">
+                  <tbody>
+                    <tr class="subtotal-amount d-none">
+                      <th>Programming fee</th>
+                      <td>
+                        <div class="input-group input-group-sm flex-nowrap">
+                          <span class="input-group-text currency-symbol d-none">₩</span>
+                          <span class="hide-input"></span>
+                          <input type="text" class="input-number input-readonly form-control form-control-sm" placeholder="Click to edit" id="finalProgramming">
+                        </div>
+                      </td>
+                    </tr>
+                    <tr class="subtotal-amount d-none">
+                      <th>Overlay fee</th>
+                      <td>
+                        <div class="input-group input-group-sm flex-nowrap">
+                          <span class="input-group-text currency-symbol d-none">₩</span>
+                          <span class="hide-input"></span>
+                          <input type="text" class="input-number input-readonly form-control form-control-sm" id="finalOverlay" readonly>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr class="subtotal-amount d-none">
+                      <th>Other fee</th>
+                      <td>
+                        <div class="input-group input-group-sm flex-nowrap">
+                          <span class="input-group-text currency-symbol d-none">₩</span>
+                          <span class="hide-input"></span>
+                          <input type="text" class="input-number input-readonly form-control form-control-sm" id="finalOther" readonly>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr class="final-amount">
+                      <th>Total sales <span style="font-size:80%;opacity:0.8;">(Excl. VAT)</span></th>
+                      <td>
+                        <div class="input-group input-group-sm flex-nowrap">
+                          <span class="input-group-text currency-symbol d-none">₩</span>
+                          <span class="hide-input"></span>
+                          <input type="text" class="input-number input-readonly form-control form-control-sm" id="finalSales" readonly>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr class="final-amount">
+                      <th>Total GM (%)</th>
+                      <td>
+                        <div class="input-group input-group-sm flex-nowrap" style="flex-direction:row-reverse;justify-content:flex-start;column-gap:2px;">
+                          <span class="input-group-text currency-symbol d-none">%</span>
+                          <span class="hide-input"></span>
+                          <input type="text" class="input-readonly form-control form-control-sm" id="finalGMPer" readonly>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr class="final-amount">
+                      <th>Total GM</th>
+                      <td>
+                        <div class="input-group input-group-sm flex-nowrap">
+                          <span class="input-group-text currency-symbol d-none">₩</span>
+                          <span class="hide-input"></span>
+                          <input type="text" class="input-number input-readonly form-control form-control-sm" id="finalGM" readonly>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Client Modal -->
+    <div class="modal fade" id="addClientModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addClientModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addClientModalLabel">Other client</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="form-group col">
+                <label for="clientName"><span lang="ko">클라이언트</span><span lang="en">Client</span></label>
+                <input type="text" class="form-control form-control-sm" name="Other client" id="clientName">
+              </div>
+              <div class="form-group col">
+                <label for="clientGroup"><span lang="ko">그룹</span><span lang="en">Group</span></label><br>
+                <select class="form-control form-control-sm selectpicker show-tick" name="Other client group" id="clientGroup" data-container="#addClientModal" title="Choose">
+                  
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary btn-sm" id="saveOtherClient">Add</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Choose countries and quotation form Modal -->
+    <div class="modal fade" id="fixedInputOSModal" data-bs-backdrop="static" data-bs-keyboard="true" aria-labelledby="fixedInputOSModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="fixedInputOSModalLabel">Form for all countries</h1>
+            <div style="width: 100%;font-size: 13px;color: #5b5b5b;opacity:0.8;">Below information will be applied to each form of chosen countries.</div>
+          </div>
+          <div class="modal-body">
+            <form id="fixedInputForm">
+              <div class="card shadow-sm">
+                <div class="card-body" style="padding-bottom:0;">
+                  <div class="row">
+                    <div class="form-group col">
+                      <div style="display:flex;">
+                        <label for="countrySelectOS">
+                          <a id="goToCountrySheet" href="https://docs.google.com/spreadsheets/d/1pWFTXnpKhO6VOzHT7KsjrUPxmKFwfQdlatTKmWvTjUk/edit?gid=263916741#gid=263916741" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="Open Country List">
+                            <span>
+                              <span lang="ko">국가</span>
+                              <span lang="en">Country</span>
+                              <span class="plus-sign"><i class="bi bi-box-arrow-up-right"></i></span>
+                            </span>
+                          </a>
+                          <span style="color:#cc2b4f;">*</span>
+                        </label>
+                        <span class="country-selection-count" style="color:#6535ff;font-size:12px;margin-left:auto;"></span>
+                      </div>
+                      <div class="input-group position-relative">
+                        <select class="form-select form-select-sm" id="countrySelectOS" name="Countries[]" data-placeholder="Search or choose countries" tabindex="-1" multiple required>
+                        </select>
+                        <button id="refreshCountryList" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" tabindex="-1" data-bs-title="Sync Country" type="button">
+                          <span class="spinner spinner-border spinner-border-sm" role="status" style="width: 1rem;height: 1rem;" aria-hidden="true"></span>
+                          <span style="font-size:18px;">
+                            <i class="bi bi-cloud-arrow-down"></i>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <br>
+              <div class="card shadow-sm">
+                <div class="card-body" style="padding-bottom:0;">
+                  <div class="row">
+                    <div class="form-group position-relative col-6">
+                      <label for="dateSelectOS"><span lang="ko">견적 날짜</span><span lang="en">RFQ Date</span> <span style="color:#cc2b4f;">*</span></label><br>
+                      <input type="text" class="form-control form-control-sm" name="RFQ Date-OS" id="dateSelectOS" tabindex="-1" readonly required/>
+                      <i class="bi bi-calendar4"></i>
+                    </div>
+                    <div class="form-group col-6">
+                      <label for="managerSelectOS"><span lang="ko">세일즈 담당</span><span lang="en">Owner</span> <span style="color:#cc2b4f;">*</span></label><br>
+                      <select class="form-control form-control-sm selectpicker show-tick" name="Owner-OS" id="managerSelectOS" title="Choose" tabindex="-1" required>
+                        <option>User 1</option>
+                        <option>User 2</option>
+                        <option>User 3</option>
+                        <option>User 4</option>
+                        <option>User 5</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-group col-6">
+                      <label for="typeSelectOS"><span lang="ko">구분</span><span lang="en">Project type</span> <span style="color:#cc2b4f;">*</span></label><br>
+                      <select class="form-control form-control-sm selectpicker show-tick" name="Project type-OS" id="typeSelectOS" title="Choose" tabindex="-1" required>
+                        <option>Type 1</option>
+                        <option>Type 2</option>
+                        <option>Type 3</option>
+                        <option>Type 4</option>
+                        <option>Others</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-6">
+                      <label for="samplingTypeSelectOS"><span lang="ko">샘플링 타입</span><span lang="en">Sampling type</span></label><br>
+                      <select class="form-control form-control-sm selectpicker show-tick" name="Sampling type-OS" id="samplingTypeSelectOS" title="Choose" tabindex="-1">
+                        <option>Random</option>
+                        <option>Booster</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-group col-12">
+                      <label for="projectNameOS"><span lang="ko">프로젝트명 (메일 제목)</span><span lang="en">Project name (Mail title)</span> <span style="color:#cc2b4f;">*</span></label>
+                      <div class="input-group position-relative">
+                        <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" tabindex="-1" title="Sync Gmail" type="button" id="refreshGmailOS"><span class="spinner spinner-border spinner-border-sm" role="status" style="width: 1rem;height: 1rem;" aria-hidden="true"></span><span style="font-size:18px;"><i class="bi bi-envelope-arrow-down"></i></span></button>
+                        <input type="search" class="form-control form-control-sm" name="Project name (Mail title)-OS" id="projectNameOS" tabindex="-1" required>
+                        <!-- <button class="btn btn-sm clear-gmail-search position-absolute" ><i class="bi bi-x"></i></button> -->
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-group col-6">
+                      <label for="picNameOS"><span lang="ko">고객명</span><span lang="en">Client name</span> <span style="color:#cc2b4f;">*</span></label>
+                      <input type="text" class="form-control form-control-sm" name="Client name-OS" id="picNameOS" tabindex="-1" required>
+                    </div>
+                    <div class="form-group col-6">
+                      <label for="clientSelectOS">
+                        <a id="goToClientSheet" href="https://docs.google.com/spreadsheets/d/1pWFTXnpKhO6VOzHT7KsjrUPxmKFwfQdlatTKmWvTjUk/edit?gid=408075240#gid=408075240" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="Open Client List">
+                          <span>
+                            <span lang="ko">클라이언트</span>
+                            <span lang="en">Client</span>
+                            <span class="plus-sign"><i class="bi bi-box-arrow-up-right"></i></span>
+                          </span>
+                        </a>
+                        <span style="color:#cc2b4f;">*</span>
+                      </label><br>
+                      <select class="form-control form-control-sm selectpicker show-tick" name="Client-OS" id="clientSelectOS" title="Choose" data-live-search="true" data-container="#fixedInputOSModal" tabindex="-1" required>
+                        
+                        <optgroup label="Other">
+                          <option>Other</option>
+                        </optgroup>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-group col-12">
+                      <label for="targetConditionOS"><span lang="ko">대상자 조건</span><span lang="en">Targeting condition</span> <span style="color:#cc2b4f;">*</span></label>
+                      <input type="text" class="form-control form-control-sm" name="Targeting condition-OS" id="targetConditionOS" tabindex="-1" required>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-group col-6">
+                      <label for="loiInputOS">LOI (min) <span style="color:#cc2b4f;">*</span></label>
+                      <div class="input-group">
+                        <input type="text" class="input-number form-control form-control-sm" name="LOI-OS" id="loiInputOS" tabindex="-1" required>
+                      </div>
+                      <div class="invalid-tooltip invalid-tooltip-loi">
+                        Please enter number 0~<span id="maxLoi">60</span>.
+                      </div>
+                    </div>
+                    <!-- <div class="form-group col">
+                      <label for="webupCostOS"><span lang="ko">총 웹업비</span><span lang="en">Total Prog. fee</span></label>
+                      <input type="text" class="input-number form-control form-control-sm" name="Programming fee" id="webupCostOS">
+                    </div> -->
+                    <div class="form-group col-6">
+                      <label for="sampleNumOS"><span lang="ko">요청 샘플수(국가별)</span><span lang="en">Requested N</span></label>
+                      <input type="text" class="input-number form-control form-control-sm" name="Requested N-OS" id="sampleNumOS" tabindex="-1">
+                    </div>
+                    
+                  </div>
+                  <div class="row">
+                    <div class="form-group col-6">
+                      <label for="operationCostOS"><span lang="ko">운영비(국가별)</span><span lang="en">Other fee</span></label>
+                      <input type="text" class="input-number form-control form-control-sm" name="Other fee-OS" id="operationCostOS" tabindex="-1" value="150,000">
+                      <div style="font-size: 11px;margin-top: 0;margin-left: 3px;opacity: 0.8;">
+                        <i>※
+                          <span lang="ko">6개국 이상은 10만원</span>
+                          <span lang="en">100,000 for 6 or more countries</span>
+                        </i>
+                      </div>
+                    </div>
+                    <div class="form-group col-6">
+                      <label for="overlayCostOS"><span lang="ko">오버레이 비용(국가별)</span><span lang="en">Overlay fee</span></label>
+                      <input type="text" class="input-number form-control form-control-sm" name="Overlay fee-OS" id="overlayCostOS" tabindex="-1">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary btn-sm" id="loadFixedInputOS"><span class="spinner spinner-border spinner-border-sm" style="margin-right:5px;" role="status" aria-hidden="true"></span>Create</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vendors select Modal -->
+    <div class="modal fade" id="selectVendorsModal" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="selectVendorsModalLabel" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="height: calc(100vh - 3.5rem);">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="selectVendorsModalLabel">Select vendors</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div style="width: 100%;font-size: 13px;color: #5b5b5b;">Select up to 5 vendors from the list below.</div>
+          </div>
+          <div class="modal-body" style="height:100%;">
+              <div class="card shadow-sm" style="height:100%;">
+                <div class="card-body" style="height:100%;">
+                  <table id="vendorsTable" class="table table-striped table-hover nowrap" width="100%">
+                    <thead>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                    <tfoot>
+                    </tfoot>
+                  </table>
+                  <!-- <div class="table-loading-spinner-container" style="height:100%;display:flex;align-items:center;justify-content:center;">
+                    <span class="spinner table-loading-spinner spinner-border spinner-border-sm spinner-busy" role="status" style="width: 2rem;height: 2rem;color: #3d3d43;" aria-hidden="true"></span>
+                  </div> -->
+                </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary btn-sm" id="loadVendors">Load</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {{FOOTER}}
+
+    <!-- Warning Alert Popup -->
+    <div class="modal fade" id="warningAlert" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="warningAlertLabel" aria-hidden="true">
+      <div class="modal-dialog" style="max-width:450px;">
+        <div class="modal-content shadow-lg" style="border-radius:10px;">
+          <div class="modal-header" style="padding: 1rem 1rem 0.1rem 1rem;border-bottom: none;">
+            <h5 class="modal-title" id="warningAlertLabel" style="font-size:18px;">Please check</h5>
+          </div>
+          <div class="modal-body" style="padding: 0.5rem 1rem 0.5rem 1rem;">
+            <div id="alertMessage" style="font-size:14px;"></div>
+          </div>
+          <div class="modal-footer" style="padding: 1rem;border-top: none;">
+            <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal" style="margin:0;padding-left:0.8rem;padding-right:0.8rem;">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirm Alert Popup -->
+    <div class="modal fade" id="confirmAlert" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="confirmAlertLabel" aria-hidden="true">
+      <div class="modal-dialog" style="max-width:450px;">
+        <div class="modal-content shadow-lg" style="border-radius:10px;">
+          <div class="modal-header" style="padding: 1rem 1rem 0.1rem 1rem;border-bottom: none;">
+            <h5 class="modal-title" id="confirmAlertLabel" style="font-size:18px;">Please confirm</h5>
+          </div>
+          <div class="modal-body" style="padding: 0.5rem 1rem 0.5rem 1rem;">
+            <div id="confirmMessage" style="font-size:14px;"></div>
+          </div>
+          <div class="modal-footer" style="padding: 1rem;border-top: none;">
+            <button type="button" class="btn btn-sm modal-alert-btn-cancel" data-bs-dismiss="modal" style="margin:0;padding-left:0.8rem;padding-right:0.8rem;">Cancel</button>
+            <button type="button" class="btn btn-primary btn-sm modal-alert-btn-confrim" data-bs-dismiss="modal" style="margin:0;padding-left:0.8rem;padding-right:0.8rem;">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Backdrop -->
+    <div id="toastBackdrop" class="toast-backdrop d-none"></div>
+    <!-- Success/Fail message popup -->
+    <div class="toast-container position-fixed p-3" style="z-index: 9999; left: 50%; top: 5px;width:350px;margin-left:-175px;">
+      <div id="successToast" class="toast fade shadow" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" tabindex="-1"><!--data-bs-delay="3000"-->
+        <div class="toast-header">
+          <!-- <img src="..." class="rounded mr-2" alt="..."> -->
+          <strong class="mr-auto" style="color:#00b5cb;font-size:115%;"><i class="bi bi-check2-circle"></i> <span id="successAlertType1"></span>d!</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" style="color:gray;font-size:90%;">
+          Your RFQ has been <span id="successAlertType2"></span>d successfully.
+          <br><span id="successAlertType3" style="display:none;">The RFQ sheet will open in a new tab shortly.</span><br>
+          <a href="https://script.google.com/macros/s/AKfycbzR4C6JvphST5AY-i8Gzpv1ECapoC0pwl4Xyv8qx4i2Mv8sIO8chVT4fKumq_VCIVr4/exec?mode=List-OS" target="_blank">Go to RFQ List.</a>
+        </div>
+      </div>
+      <div id="failToast" class="toast fade shadow" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" tabindex="-1">
+        <div class="toast-header">
+          <strong class="mr-auto" style="color:#cc2b4f;font-size:115%;"><i class="bi bi-exclamation-octagon"></i> Failed..</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" style="color:gray;font-size:90%;">
+          <span class="fail-error-message"></span>
+        </div>
+      </div>
+    </div>
+    
+    
+    <!--jQuery & jQueryUI cdn -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js" integrity="sha256-J8ay84czFazJ9wcTuSDLpPmwpMXOm573OUtZHPQqpEU=" crossorigin="anonymous"></script>
+
+    <!--bootstrap and popper cdn -->
+    
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script> -->
+
+    <!-- bootstrap select -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/js/bootstrap-select.min.js"></script> -->
+    <!-- Latest compiled and minified JavaScript -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/i18n/defaults-*.min.js"></script> -->
+    <?!= include('[JS]Bootstrap-Select.js'); ?>
+
+    <!-- Select2 -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/v/bs5/dt-2.1.3/sl-2.0.4/datatables.min.js"></script>
+    <!-- <script src="https://cdn.datatables.net/v/dt/dt-2.1.3/sl-2.0.4/datatables.min.js"></script> -->
+    <script src="https://cdn.datatables.net/plug-ins/2.1.6/features/scrollResize/dataTables.scrollResize.min.js"></script>
+    <script src="https://cdn.datatables.net/fixedcolumns/5.0.1/js/dataTables.fixedColumns.js"></script>
+    <script src="https://cdn.datatables.net/fixedcolumns/5.0.1/js/fixedColumns.bootstrap5.js"></script>
+
+    <!-- moment -->
+    <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
+    <!-- Date Range Picker -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+    <?!= include('[JS]Navbar'); ?> <!--INCLUDE [JS]Navbar.html FILE-->
+
+    <script>
+      $('footer.footer').hide();
+
+      function bindScroll(){
+        if($(window).scrollTop() + $(window).height() > $(document).height() - 80) {
+            $('.card-countries-list').css('height','calc(100% - 92.5px - 80px)');
+        } else {
+            $('.card-countries-list').css('height','calc(100% - 92.5px)');
+        }
+      }
+
+      $(window).scroll(bindScroll);
+
+      var loadedRfqId;
+      var rfqListHeaderArray = [];
+      var rfqListArray = [];
+      var fillInputArray = [];
+
+      google.script.url.getLocation(function(location) {
+          // 'location' object contains the query string parameters
+        var params = location.parameter;
+        if(params['rfqid'] !== undefined) {
+            //$('#fixedInputOSModal').modal('hide');
+            $('.navbar,.main-body,.page-loading-spinner-container').toggleClass('d-none');
+            loadedRfqId = params['rfqid'];
+            $('#rfqId').val(loadedRfqId);
+            $('#updateAll').closest('li').removeClass('d-none');
+            //runWithRetry('getRFQOS', showDataOS, GetFailAlert); 
+            runWithRetry('getRFQOS', showDataOS, GetFailAlert, 0, 3, loadedRfqId); 
+            //google.script.run.withSuccessHandler(showRFQOS).getRFQOS();
+        } else if(params['draftid'] !== undefined) {
+            //$('#fixedInputOSModal').modal('hide');
+            $('.navbar,.main-body,.page-loading-spinner-container').toggleClass('d-none');
+            loadedRfqId = params['draftid'];
+            $('.edit-rfq-type').text('Draft');
+            //runWithRetry('getDraftOS', showDataOS, GetFailAlert); 
+            runWithRetry('getDraftOS', showDataOS, GetFailAlert, 0, 3, loadedRfqId); 
+            //google.script.run.withSuccessHandler(showRFQOS).getRFQOS();
+        } else {
+          $('#fixedInputOSModal').modal('show');
+        }
+      });
+
+      function showDataOS(response) {
+        var dataArray = response.dataArray;
+        //console.log(dataArray);
+        rfqListHeaderArray = dataArray[0];
+        //rfqListArray = dataArray.filter(arr => arr[0] === loadedRfqId);
+        rfqListArray = dataArray.slice(1);
+
+        //console.log(rfqListHeaderArray);
+        //console.log(rfqListArray);
+
+        $('.main-body,.navbar-btn-container,.page-title-country,footer.footer').show();
+        $('.page-title-country').addClass('show');
+        $('.create-rfq-title').toggleClass('d-none');
+        $('.edit-rfq-title').toggleClass('d-none');
+        $('.edit-rfq-id').text('#' + loadedRfqId);
+
+        $(document).ready(function () {
+            var startTime = new Date();
+
+            runWithRetry('getClient', showClient, GetFailAlert);
+
+            var selected_countries = [];
+
+            // MAKE fillInputArray INTO AN ARRAY OF OBJECTS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+            
+
+            // Quotation form에 로드할 RFQ 데이터를 fillInputArray 배열에 추가 | Add the RFQ data to the fillInputArray array to load it into the Quotation form.
+            for (var i = 0; i < rfqListArray.length; i++) {
+              //var rfq_obj_arr = [];
+              var rfq_obj = {};
+              for (var j = 0; j < rfqListHeaderArray.length; j++) {
+                //rfq_obj = {name: rfqListHeaderArray[j], value: rfqListArray[i][j]};
+                //rfq_obj_arr.push(rfq_obj);
+                rfq_obj[rfqListHeaderArray[j]] = rfqListArray[i][j];
+              }
+              selected_countries.push(rfqListArray[i][rfqListHeaderArray.indexOf('GID')].toUpperCase() + "-" + rfqListArray[i][rfqListHeaderArray.indexOf('Country')]);
+              fillInputArray.push(rfq_obj);
+              //fillInputArray[rfqListArray[i][rfqListHeaderArray.indexOf('GID')]] = rfq_obj;
+            }
+
+            //console.log("Step 1: fillInputArray에 추가 - Time: " + (new Date() - startTime) + "ms");
+
+
+            //console.log(selected_countries);
+            //console.log(fillInputArray);
+
+            selected_countries.forEach(function(el){
+              const country_code = el.split('-').length > 2 ? el.split('-')[0].toLowerCase() + "-" + el.split('-')[1].toLowerCase() : el.split('-')[0].toLowerCase();
+              //console.log(country_code);
+              cloneInputFormTemplate(country_code);
+              cloneClientSelectOS(country_code);
+              cloneCountrySelect(el);
+            });
+
+            //console.log("Step 2: Cloning - Time: " + (new Date() - startTime) + "ms");
+
+            $('.selectpicker').selectpicker('refresh');
+            //$('[id^=dateSelect]').data('daterangepicker').updateView();
+            switchRFQModeToggle();
+            initLang();
+            loadInputOS = true;
+
+            $('.selectpicker').selectpicker('refresh');
+            
+            var final_programming_val;
+
+            fillInputArray.forEach((data, idx) => {
+              const country_code = data["GID"];
+              const markup_val = data["Markup"];
+              const client_val = data["Client"];
+              const proposal_cpi_val = data["Proposal CPI"];
+
+              if (idx === 0) {
+                final_programming_val = data["Total programming fee"];
+              }
+
+              //console.log("Step 3-1: Filling - Time: " + (new Date() - startTime) + "ms");
+
+              Object.entries(data).forEach(([name, value]) => {
+                const selector = `input[name="${name}-${country_code}"], select[name="${name}-${country_code}"]`;
+                const $input = $(`#quoteForm`).find(selector);
+
+                if ($input.length && $input.val() !== value) {
+                  $input.val(value);
+                  if ($input.hasClass("selectpicker")) $input.selectpicker("refresh");
+                }
+
+                if (name === "RFQ Date") {
+                  RefreshDatePicker(`#quoteForm #dateSelect-${country_code}`, value);
+                }
+              });
+
+              //console.log("Step 3-2: Filling - Time: " + (new Date() - startTime) + "ms");
+
+              if (parseFloat(markup_val) > 1.7 || markup_val.toString().split(".")[1]?.length > 1) {
+                const newState = new Option(markup_val, markup_val, true, true);
+                $(`#markUpSelect-${country_code}`).append(newState);
+              }
+
+              //console.log("Step 3-3: Filling - Time: " + (new Date() - startTime) + "ms");
+
+              const $markupSelect = $(`#markUpSelect-${country_code}`);
+              if ($markupSelect.val() !== markup_val) {
+                $markupSelect.val(markup_val);
+              }
+
+              //console.log("Step 3-4: Filling - Time: " + (new Date() - startTime) + "ms");
+
+              // $(`#calcTotal-${country_code}`).trigger("click")
+              //   .closest(".dropdown-markup-select")
+              //   .find('button[data-bs-toggle="dropdown"]')
+              //   .dropdown("toggle");
+
+              AppendTotalVendorResult(country_code);
+
+              //console.log("Step 3-5: Filling - Time: " + (new Date() - startTime) + "ms");
+
+              const $proposalCPI = $(`#proposalCPI-${country_code}`);
+              if ($proposalCPI.val() !== proposal_cpi_val) {
+                $proposalCPI.val(proposal_cpi_val);
+                UpdateActiveVendorResult(country_code);
+                $(`#calcResultTable-${country_code} tbody tr.table-active`).trigger("click");
+              }
+
+              $(`#clientSelect-${country_code}`).val(client_val).change();
+
+              //console.log("Step 3-6: Filling - Time: " + (new Date() - startTime) + "ms");
+            });
+
+
+            //console.log("Step 3: Fill inputs - Time: " + (new Date() - startTime) + "ms");
+
+            $('#finalProgramming').val(final_programming_val || '').trigger('input');
+
+            //final programming currency symbol alignment!!!!!!!!!!!!!!!!!
+            //client keeps becoming empty -> needs fix!!!!!!!!!!!!!!!!!!!
+
+            //$('#quoteForm .currency-symbol~.input-readonly').trigger('input');
+            $('.select-country-btn').eq(0).addClass('active');
+            $('.select-country-btn').eq(0).attr('aria-selected','true');
+            $('.country-input-form').eq(0).addClass('show active');
+            $('.page-title-country-flag').attr('src',$('.select-country-btn').eq(0).find('.select-country-flag').attr('src'));
+            $('.page-title-country-text').text($('.select-country-btn').eq(0).closest('.select-country-card').find('.select-country-text').val());
+
+            initializeMarkupSelect2('[id^=markUpSelect]');
+            
+            $('.selectpicker').selectpicker('refresh');
+            
+            CalculateSubtotalAmount();
+
+            $('[id^=openVendorModal]').find('.spinner').addClass('spinner-busy');
+            $('[id^=openVendorModal]').find('.spinner+span').hide();
+            $('[id^=openVendorModal]').addClass('disabled');
+            runWithRetry('getVendors', showVendors, GetFailAlert);
+
+            $('[id^=totalTargetSample-]').each(function(){
+                const country_code = $(this).attr('id').split(/-(.*)/s)[1];
+                const sample_num = $('#sampleNum-' + country_code).val();
+                if(sample_num !== '') {
+                    $(this).val(sample_num);
+                }
+            });
+
+            $('.currency-symbol~.input-readonly').trigger('input');
+            
+
+          $('.navbar,.main-body,.page-loading-spinner-container').toggleClass('d-none');
+        });
+      }
+
+
+
+    </script>
+    
+    <?!= include('[JS]Functions(Common)'); ?> <!--INCLUDE [JS]Functions(Common).html FILE-->
+    <?!= include('[JS]Actions(Common)'); ?> <!--INCLUDE [JS]Actions(Common).html FILE-->
+    <?!= include('[JS]JavaScript(CreateOS)'); ?> <!--INCLUDE [JS]JavaScript(CreateOS).html FILE-->
+    
+  </body>
+</html>
