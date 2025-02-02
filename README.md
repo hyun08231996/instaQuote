@@ -15,6 +15,12 @@ instaQuote is a **quotation generation tool** developed using **Google Apps Scri
 - Implemented features for **saving RFQs, loading saved RFQs, and updating RFQs** to ensure seamless management of quotations.
 
 ## Live Demo 🎥
+🔗 Click below to watch full live demo (Part 1)! ⬇️<br>
+[![Watch the live demo (Part 1)!](https://github.com/user-attachments/assets/ddfcd442-417a-4553-924a-df510bc8430f)](https://youtu.be/681pKKd5nds)
+<br><br>
+🔗 Click below to watch full live demo (Part 2)! ⬇️<br>
+[![Watch the live demo (Part 2)!](https://github.com/user-attachments/assets/ddfcd442-417a-4553-924a-df510bc8430f)](https://youtu.be/GztG-WE5vHg)
+<br><br>
 🔗 [Go to instaQuote](https://script.google.com/macros/s/AKfycbzR4C6JvphST5AY-i8Gzpv1ECapoC0pwl4Xyv8qx4i2Mv8sIO8chVT4fKumq_VCIVr4/exec) <i>(* Google login required)</i>
 
 ## Notable Features 🌟
